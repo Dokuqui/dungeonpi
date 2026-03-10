@@ -6,6 +6,7 @@ import { CreateCharacterUseCase } from './app/usecases/create-character.usecase'
 import { CHARACTER_REPOSITORY } from './app/interface/character-repository.interface';
 import { CharacterRepository } from './infra/persistence/repo/character.repository';
 import { GetCharacterUseCase } from './app/usecases/get-character.usecase';
+import { MoveCharacterUseCase } from './app/usecases/move-character.usecase';
 
 @Module({
   imports: [TypeOrmModule.forFeature([CharacterOrmEntity])],
@@ -13,6 +14,7 @@ import { GetCharacterUseCase } from './app/usecases/get-character.usecase';
   providers: [
     CreateCharacterUseCase,
     GetCharacterUseCase,
+    MoveCharacterUseCase,
     {
       provide: CHARACTER_REPOSITORY,
       useClass: CharacterRepository,
