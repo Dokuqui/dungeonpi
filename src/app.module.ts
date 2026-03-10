@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './context/auth/auth.module';
 import { CharacterModule } from './context/characters/character.module';
+import { WorldModule } from './context/world/world.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { CharacterModule } from './context/characters/character.module';
     }),
     AuthModule,
     CharacterModule,
+    WorldModule,
   ],
   controllers: [AppController],
   providers: [AppService],
