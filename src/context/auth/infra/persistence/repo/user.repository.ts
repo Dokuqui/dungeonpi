@@ -37,6 +37,7 @@ export class UserRepository implements IUserRepository {
       ormEntity.id,
       Email.create(ormEntity.email),
       Password.createFromHash(ormEntity.password),
+      ormEntity.role,
       ormEntity.createdAt,
     );
   }
@@ -48,6 +49,7 @@ export class UserRepository implements IUserRepository {
     }
     ormEntity.email = domainEntity.email.value;
     ormEntity.password = domainEntity.password.value;
+    ormEntity.role = domainEntity.role;
     ormEntity.createdAt = domainEntity.createdAt;
     return ormEntity;
   }

@@ -1,3 +1,4 @@
+import { Role } from 'src/context/auth/domain/role.enum';
 import {
   Column,
   CreateDateColumn,
@@ -15,6 +16,9 @@ export class UserOrmEntity {
 
   @Column()
   password!: string;
+
+  @Column({ type: 'varchar', default: Role.PLAYER })
+  role!: Role;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt!: Date;

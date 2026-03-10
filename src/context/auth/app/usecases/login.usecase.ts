@@ -49,7 +49,10 @@ export class LoginUseCase {
       throw new Error('Critical error: Saved user lacks an ID.');
     }
 
-    const accessToken = await this.tokenService.generateToken(user.id);
+    const accessToken = await this.tokenService.generateToken(
+      user.id,
+      user.role,
+    );
 
     return { accessToken };
   }
