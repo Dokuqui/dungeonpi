@@ -7,9 +7,14 @@ import { CreateRoomUseCase } from './app/usecases/create-room.usecase';
 import { LookAroundUseCase } from './app/usecases/look-around.usecase';
 import { ROOM_REPOSITORY } from './app/interface/room-repository.interface';
 import { RoomRepository } from './infra/persistence/repo/room.repository';
+import { MonstersModule } from '../monsters/monsters.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([RoomOrmEntity]), CharacterModule],
+  imports: [
+    TypeOrmModule.forFeature([RoomOrmEntity]),
+    CharacterModule,
+    MonstersModule,
+  ],
   controllers: [WorldController],
   providers: [
     CreateRoomUseCase,

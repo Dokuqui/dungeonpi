@@ -6,6 +6,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './context/auth/auth.module';
 import { CharacterModule } from './context/characters/character.module';
 import { WorldModule } from './context/world/world.module';
+import { MonstersModule } from './context/monsters/monsters.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -27,9 +29,13 @@ import { WorldModule } from './context/world/world.module';
         synchronize: true,
       }),
     }),
+
+    ScheduleModule.forRoot(),
+
     AuthModule,
     CharacterModule,
     WorldModule,
+    MonstersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
