@@ -14,14 +14,16 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { Request } from 'express';
 import { JwtAuthGuard } from '../../../core/guards/jwt-auth.guard';
-import { RolesGuard } from '../../../core/guards/roles.guard';
+import { PermissionsGuard } from '../../../core/guards/permissions.guard';
+import { Permissions } from '../../../core/decorators/permissions.decorator';
+import { Permission } from '../../auth/domain/permission.enum';
+import { Role } from '../../auth/domain/role.enum';
 import { CreateRoomUseCase } from '../app/usecases/create-room.usecase';
 import { LookAroundUseCase } from '../app/usecases/look-around.usecase';
-import { Roles } from 'src/core/decorators/roles.decorator';
-import { Role } from 'src/context/auth/domain/role.enum';
+import { GetCharacterUseCase } from '../../characters/app/usecases/get-character.usecase';
 import { CreateRoomDto } from './dtos/create-room.dto';
-import { GetCharacterUseCase } from 'src/context/characters/app/usecases/get-character.usecase';
 
 interface RequestWithUser extends Request {
   user: { userId: number; role: Role };
@@ -29,7 +31,7 @@ interface RequestWithUser extends Request {
 
 @ApiTags('World')
 @Controller('world')
-@UseGuards(JwtAuthGuard, RolesGuard)
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiBearerAuth()
 export class WorldController {
   constructor(
@@ -39,11 +41,13 @@ export class WorldController {
   ) {}
 
   @Post('rooms')
-  @Roles(Role.ADMIN)
+  @Permissions(Permission.CREATE_ROOM)
   @HttpCode(HttpStatus.CREATED)
-  @ApiOperation({ summary: 'Create a new room (Admin Only)' })
+  @ApiOperation({
+    summary: 'Create a new room (Requires CREATE_ROOM permission)',
+  })
   @ApiResponse({ status: 201, description: 'Room created successfully.' })
-  @ApiResponse({ status: 403, description: 'Forbidden: Requires ADMIN role.' })
+  @ApiResponse({ status: 403, description: 'Forbidden: Missing permission.' })
   async createRoom(@Body() dto: CreateRoomDto) {
     await this.createRoomUseCase.execute(dto);
     return { message: `Room '${dto.name}' created at (${dto.x}, ${dto.y}).` };
@@ -55,7 +59,6 @@ export class WorldController {
   @ApiResponse({ status: 200, description: 'Returns what is in the room.' })
   async lookAround(@Req() req: RequestWithUser) {
     const character = await this.getCharacterUseCase.execute(req.user.userId);
-
     return this.lookAroundUseCase.execute({
       x: character.coordinates.x,
       y: character.coordinates.y,
