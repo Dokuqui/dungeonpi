@@ -7,12 +7,14 @@ import { CHARACTER_REPOSITORY } from './app/interface/character-repository.inter
 import { CharacterRepository } from './infra/persistence/repo/character.repository';
 import { GetCharacterUseCase } from './app/usecases/get-character.usecase';
 import { MoveCharacterUseCase } from './app/usecases/move-character.usecase';
+import { GetCharactersAtCoordinatesUseCase } from './app/usecases/get-characters-at-coordinates.usecase';
 
 @Module({
   imports: [TypeOrmModule.forFeature([CharacterOrmEntity])],
   controllers: [CharactersController],
   providers: [
     CreateCharacterUseCase,
+    GetCharactersAtCoordinatesUseCase,
     GetCharacterUseCase,
     MoveCharacterUseCase,
     {
@@ -20,6 +22,6 @@ import { MoveCharacterUseCase } from './app/usecases/move-character.usecase';
       useClass: CharacterRepository,
     },
   ],
-  exports: [GetCharacterUseCase],
+  exports: [GetCharacterUseCase, GetCharactersAtCoordinatesUseCase],
 })
 export class CharacterModule {}

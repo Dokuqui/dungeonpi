@@ -25,6 +25,13 @@ export class CharacterRepository implements ICharacterRepository {
     return this.toDomainEntity(ormEntity);
   }
 
+  async findByCoordinates(x: number, y: number): Promise<Character[]> {
+    const ormEntities = await this.ormRepository.find({
+      where: { coordX: x, coordY: y },
+    });
+    return ormEntities.map((orm) => this.toDomainEntity(orm));
+  }
+
   private toOrmEntity(domain: Character): CharacterOrmEntity {
     const orm = new CharacterOrmEntity();
     if (domain.id !== undefined) {
