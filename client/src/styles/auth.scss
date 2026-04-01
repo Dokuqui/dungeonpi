@@ -1,0 +1,87 @@
+@use './global.scss' as *;
+
+.auth-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+
+  .auth-box {
+    @include game-panel;
+    width: 350px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+
+    h2 {
+      text-align: center;
+      color: $color-blood;
+      text-shadow: 1px 1px 2px #000;
+      margin-bottom: 10px;
+      font-size: 2rem;
+    }
+
+    .error-message {
+      color: #ff4a4a;
+      background: rgba(138, 3, 3, 0.2);
+      border: 1px solid #8a0303;
+      padding: 8px;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    input {
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid $color-iron;
+      color: $color-parchment;
+      font-family: 'MedievalSharp', cursive;
+      padding: 10px;
+      font-size: 1.1rem;
+      outline: none;
+      transition: border 0.3s ease;
+
+      &:focus {
+        border-color: $color-blood;
+        box-shadow: 0 0 5px $color-blood;
+      }
+    }
+
+    button {
+      background: linear-gradient(to bottom, #3a3a3a, #1a1a1a);
+      border: 2px solid $color-iron;
+      color: $color-parchment;
+      font-family: 'MedievalSharp', cursive;
+      padding: 10px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-top: 10px;
+
+      &:hover {
+        background: linear-gradient(to bottom, #8a0303, #4a0101);
+        border-color: #ff4a4a;
+      }
+      &:active {
+        transform: scale(0.98);
+      }
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    }
+
+    .toggle-link {
+      text-align: center;
+      font-size: 0.9rem;
+      cursor: pointer;
+      color: #888;
+
+      &:hover {
+        color: $color-parchment;
+        text-decoration: underline;
+      }
+    }
+  }
+}
