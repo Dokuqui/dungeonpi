@@ -1,12 +1,7 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, ConflictException } from '@nestjs/common';
 import { CHARACTER_REPOSITORY } from '../interface/character-repository.interface';
 import type { ICharacterRepository } from '../interface/character-repository.interface';
 import { Character } from '../../domain/character.entity';
-
-export interface CreateCharacterInputDto {
-  userId: number;
-  name: string;
-}
 
 @Injectable()
 export class CreateCharacterUseCase {
@@ -15,16 +10,25 @@ export class CreateCharacterUseCase {
     private readonly characterRepository: ICharacterRepository,
   ) {}
 
-  async execute(input: CreateCharacterInputDto): Promise<void> {
-    const existingCharacter = await this.characterRepository.findByUserId(
-      input.userId,
-    );
-    if (existingCharacter) {
-      throw new Error('User already has an active character.');
+  async execute(params: { userId: number; name: string }): Promise<Character> {
+    const { userId, name } = params;
+
+    const existingByUser = await this.characterRepository.findByUserId(userId);
+    if (existingByUser) {
+      throw new ConflictException(
+        'Your soul is already bound to another hero.',
+      );
     }
 
-    const newCharacter = Character.create(input.userId, input.name);
+    const existingByName = await this.characterRepository.findByName(name);
+    if (existingByName) {
+      throw new ConflictException(
+        `The name "${name}" is already claimed by another soul.`,
+      );
+    }
 
-    await this.characterRepository.save(newCharacter);
+    const character = Character.create(userId, name);
+    await this.characterRepository.save(character);
+    return character;
   }
 }

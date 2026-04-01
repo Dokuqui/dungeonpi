@@ -85,3 +85,54 @@
     }
   }
 }
+
+.hero-selection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+
+  .hero-card {
+    width: 100%;
+    padding: 25px;
+    background: linear-gradient(
+      135deg,
+      rgba(30, 30, 30, 0.8),
+      rgba(10, 10, 10, 0.9)
+    );
+    border: 1px solid $color-iron;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+
+    &:hover {
+      border-color: $color-blood;
+      box-shadow: 0 0 15px rgba(138, 3, 3, 0.4);
+    }
+
+    p {
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      color: #666;
+      margin-bottom: 5px;
+    }
+
+    h3 {
+      font-size: 2.2rem;
+      color: $color-parchment;
+      text-shadow: 2px 2px 0px #000;
+    }
+  }
+
+  .alt-path {
+    margin-top: 10px;
+    font-size: 0.85rem;
+    color: #555;
+    text-decoration: underline;
+    cursor: pointer;
+    &:hover {
+      color: $color-blood;
+    }
+  }
+}

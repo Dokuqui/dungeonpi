@@ -1,8 +1,10 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
+  NotFoundException,
   Post,
   Req,
   UseGuards,
@@ -19,9 +21,15 @@ import { CreateCharacterUseCase } from '../app/usecases/create-character.usecase
 import { CreateCharacterDto } from './dtos/create-character.dto';
 import { MoveCharacterUseCase } from '../app/usecases/move-character.usecase';
 import { MoveCharacterDto } from './dtos/move-character.dto';
+import { Permissions } from 'src/core/decorators/permissions.decorator';
+import { Permission } from 'src/context/auth/domain/permission.enum';
+import { GetCharacterUseCase } from '../app/usecases/get-character.usecase';
 
 interface RequestWithUser extends Request {
-  user: { userId: number };
+  user: {
+    userId: number;
+    role: string;
+  };
 }
 
 @ApiTags('Characters')
@@ -31,6 +39,7 @@ interface RequestWithUser extends Request {
 export class CharactersController {
   constructor(
     private readonly createCharacterUseCase: CreateCharacterUseCase,
+    private readonly getCharacterUseCase: GetCharacterUseCase,
     private readonly moveCharacterUseCase: MoveCharacterUseCase,
   ) {}
 
@@ -48,6 +57,25 @@ export class CharactersController {
     });
 
     return { message: `${dto.name} has entered the dungeon!` };
+  }
+
+  @Get('me')
+  @Permissions(Permission.PLAY_GAME)
+  @ApiOperation({ summary: 'Get the character belonging to the current user' })
+  async getMyCharacter(@Req() req: RequestWithUser) {
+    const userId = req.user.userId;
+
+    const character = await this.getCharacterUseCase.execute(userId);
+
+    if (!character) {
+      throw new NotFoundException('No character found for this user.');
+    }
+
+    return {
+      id: character.id,
+      name: character.name,
+      // add level/xp here once implement the Progression Context
+    };
   }
 
   @Post('move')

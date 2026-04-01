@@ -25,16 +25,219 @@ html {
 #root {
   width: 100%;
   height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 @mixin game-panel {
-  background: rgba(20, 20, 20, 0.9);
-  border: 2px solid $color-iron;
-  box-shadow:
-    inset 0 0 10px #000,
-    0 4px 6px rgba(0, 0, 0, 0.5);
+  background: rgba(15, 15, 15, 0.95);
+  border: 1px solid $color-iron;
+  box-shadow: inset 0 0 15px #000;
   padding: 20px;
+  transition: all 0.4s ease-in-out;
+}
+
+.game-screen {
+  display: grid;
+  grid-template-areas:
+    'header header header'
+    'inspector world sidebar'
+    'chat chat chat';
+  grid-template-rows: 50px 1fr 120px;
+
+  grid-template-columns: var(--inspector-width, 300px) 1fr var(
+      --sidebar-width,
+      250px
+    );
+
+  width: 100vw;
+  height: 100vh;
+  transition: grid-template-columns 0.4s ease-in-out;
+  overflow: hidden;
+  position: relative;
+
+  > * {
+    min-height: 0;
+    min-width: 0;
+  }
+
+  .game-header {
+    grid-area: header;
+    @include game-panel;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    z-index: 10;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+  }
+
+  .game-inspector {
+    grid-area: inspector;
+    @include game-panel;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    width: var(--inspector-width, 300px);
+    padding: var(--inspector-padding, 20px);
+    border-right-width: var(--inspector-border, 1px);
+    opacity: var(--inspector-opacity, 1);
+
+    transition: all 0.4s ease-in-out;
+    border-top: none;
+    border-bottom: none;
+    border-left: none;
+  }
+
+  .game-sidebar {
+    grid-area: sidebar;
+    @include game-panel;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    width: var(--sidebar-width, 250px);
+    padding: var(--sidebar-padding, 20px);
+    border-left-width: var(--sidebar-border, 1px);
+    opacity: var(--sidebar-opacity, 1);
+
+    transition: all 0.4s ease-in-out;
+    border-top: none;
+    border-bottom: none;
+    border-right: none;
+  }
+
+  .game-world {
+    grid-area: world;
+    background: radial-gradient(circle, #1a1a1a 0%, #050505 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+    padding: 10px;
+
+    .phaser-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      canvas {
+        max-width: 100% !important;
+        max-height: 100% !important;
+        object-fit: contain;
+        box-shadow: 0 0 40px #000;
+        border: 1px solid $color-iron;
+      }
+    }
+  }
+
+  .game-chat {
+    grid-area: chat;
+    @include game-panel;
+    border-bottom: none;
+    border-left: none;
+    border-right: none;
+  }
+}
+
+.logout-btn {
+  background: transparent;
+  border: 1px solid $color-iron;
+  color: $color-parchment;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-family: 'MedievalSharp';
+  display: flex;
+  align-items: center;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba(138, 3, 3, 0.2);
+    border-color: $color-blood;
+    color: #fff;
+  }
+}
+
+.toggle-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(20, 20, 20, 0.85);
+  border: 1px solid $color-iron;
+  color: $color-parchment;
+  cursor: pointer;
+  z-index: 1000;
+  font-family: 'MedievalSharp';
+  transition: all 0.4s ease-in-out;
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 6px;
+  width: 32px;
+  height: 60px; // Added a fixed height for a better "tab" look
+
+  &:hover {
+    background: $color-blood;
+    color: #fff;
+    border-color: #ff4a4a;
+  }
+
+  // THIS IS THE MISSING PIECE:
+  &.left-btn {
+    left: var(--inspector-width, 300px);
+    border-left: none;
+    border-radius: 0 8px 8px 0;
+  }
+
+  &.right-btn {
+    right: var(--sidebar-width, 250px);
+    border-right: none;
+    border-radius: 8px 0 0 8px;
+  }
+
+  svg {
+    transition: transform 0.2s ease;
+    filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.5));
+  }
+
+  &:hover svg {
+    color: #fff;
+    transform: scale(1.1);
+  }
+}
+
+.room-details {
+  h3 {
+    color: $color-blood;
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+    border-bottom: 1px solid $color-iron;
+  }
+  p {
+    line-height: 1.4;
+    color: $color-parchment;
+    margin-bottom: 20px;
+    font-style: italic;
+  }
+
+  .section-title {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: #666;
+    margin-bottom: 5px;
+    letter-spacing: 1px;
+  }
+
+  .monster-list {
+    list-style: none;
+    li {
+      color: #ff4a4a;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255, 74, 74, 0.1);
+      font-size: 0.95rem;
+    }
+  }
 }

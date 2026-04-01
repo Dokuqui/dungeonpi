@@ -6,4 +6,5 @@ export interface ICharacterRepository {
   save(character: Character): Promise<void>;
   findByUserId(userId: number): Promise<Character | null>;
   findByCoordinates(x: number, y: number): Promise<Character[]>;
+  findByName(name: string): Promise<Character | null>;
 }
