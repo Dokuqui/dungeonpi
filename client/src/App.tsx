@@ -4,62 +4,66 @@ import Gate from './pages/Gate';
 import Tavern from './pages/Tavern';
 import Dungeon from './components/Dungeon';
 import WorldInspector from './components/WorldInspector';
-import {
-  PanelLeftClose,
-  PanelLeftOpen,
-  PanelRightClose,
-  PanelRightOpen,
-  LogOut,
-  Map as MapIcon
-} from 'lucide-react';
+import { PanelLeftClose, PanelLeftOpen, PanelRightClose, PanelRightOpen, LogOut, ChevronDown, Mail, MessageSquare, Settings, User, Bell, Crown } from 'lucide-react';
+import { useWorldStore } from './store/useWorldStore';
 
 export default function App() {
-  const { token, character, logout } = useAuthStore();
+  const { token, character, role, logout } = useAuthStore();
   const [showInspector, setShowInspector] = useState(true);
   const [showSidebar, setShowSidebar] = useState(true);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const room = useWorldStore((state) => state.room);
 
   if (!token) return <Gate />;
   if (!character) return <Tavern />;
 
   const gridStyle = {
     '--inspector-width': showInspector ? '300px' : '0px',
-    '--inspector-padding': showInspector ? '20px' : '0px',
-    '--inspector-border': showInspector ? '1px' : '0px',
-    '--inspector-opacity': showInspector ? '1' : '0',
-
     '--sidebar-width': showSidebar ? '250px' : '0px',
-    '--sidebar-padding': showSidebar ? '20px' : '0px',
-    '--sidebar-border': showSidebar ? '1px' : '0px',
-    '--sidebar-opacity': showSidebar ? '1' : '0',
   } as React.CSSProperties;
 
   return (
     <div className="game-screen" style={gridStyle}>
       <header className="game-header">
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <MapIcon size={20} color="#8a0303" />
-          <h2 style={{ color: '#8a0303' }}>{character.name}</h2>
+        <div className="header-left"
+          onClick={() => setMenuOpen(!menuOpen)}
+          style={{ cursor: 'pointer', position: 'relative' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div className="avatar-circle"><User size={16} /></div>
+            <h2 style={{ color: '#8a0303' }}>{character.name}</h2>
+            <ChevronDown size={14} color={menuOpen ? "#8a0303" : "#666"} />
+          </div>
+
+          {menuOpen && (
+            <div className="header-dropdown">
+              <div className="dropdown-item"><Mail size={14} /> Mailbox <span className="badge">2</span></div>
+              <div className="dropdown-item"><MessageSquare size={14} /> Messages</div>
+              <div className="dropdown-item"><Settings size={14} /> Settings</div>
+              <hr />
+              <div className="dropdown-item logout" onClick={logout}><LogOut size={14} /> Abandon Quest</div>
+            </div>
+          )}
         </div>
 
-        <div style={{ color: '#666', fontSize: '0.9rem', letterSpacing: '2px' }}>X: 0 | Y: 0</div>
-
-        <button className="logout-btn" onClick={logout}>
-          <LogOut size={16} style={{ marginRight: '8px' }} />
-          Abandon Quest
-        </button>
+        <div className="header-center">
+          Room X: {room?.x ?? 0} | Room Y: {room?.y ?? 0}
+        </div>
+        <div className="header-right" style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
+          {role === 'ADMIN' && (
+            <div style={{ color: '#d4c4a1', display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer', background: '#2a0808', padding: '4px 10px', borderRadius: '4px', border: '1px solid #8a0303' }}>
+              <Crown size={14} color="#f1c40f" /> GM Panel
+            </div>
+          )}
+          <span>V.0.1.2 ALPHA</span>
+        </div>
       </header>
 
-      <button
-        className="toggle-btn left-btn"
-        onClick={() => setShowInspector(!showInspector)}
-      >
+      <button className="toggle-btn left-btn" onClick={() => setShowInspector(!showInspector)}>
         {showInspector ? <PanelLeftClose size={20} /> : <PanelLeftOpen size={20} />}
       </button>
 
-      <button
-        className="toggle-btn right-btn"
-        onClick={() => setShowSidebar(!showSidebar)}
-      >
+      <button className="toggle-btn right-btn" onClick={() => setShowSidebar(!showSidebar)}>
         {showSidebar ? <PanelRightClose size={20} /> : <PanelRightOpen size={20} />}
       </button>
 
@@ -81,10 +85,12 @@ export default function App() {
       </aside>
 
       <footer className="game-chat">
-        <div className="section-title">System Log</div>
-        <div style={{ flex: 1, overflowY: 'auto', fontSize: '0.85rem', color: '#aaa' }}>
-          <p style={{ color: '#d4c4a1' }}>[System] Connection established to the void.</p>
-          <p>[System] Use arrows to explore...</p>
+        <div className="section-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <Bell size={14} /> Notifications
+        </div>
+        <div style={{ flex: 1, overflowY: 'auto', fontSize: '0.85rem', color: '#666' }}>
+          <p style={{ color: '#d4c4a1' }}>[System] {character.name} has entered the room.</p>
+          <p>[System] Connection established to the void.</p>
         </div>
       </footer>
     </div>

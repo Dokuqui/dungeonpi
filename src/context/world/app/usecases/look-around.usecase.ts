@@ -1,58 +1,47 @@
-import { Inject, Injectable } from '@nestjs/common';
 import {
-  ROOM_REPOSITORY,
-  type IRoomRepository,
-} from '../interface/room-repository.interface';
-import { GetMonsterAtCoordinatesUseCase } from 'src/context/monsters/app/usecases/get-monster-at-coordinates.usecase';
-
-export interface LookAroundInputDto {
-  x: number;
-  y: number;
-}
-
-export interface LookAroundOutputDto {
-  name: string;
-  description: string;
-  monster?: {
-    name: string;
-    health: number;
-    maxHealth: number;
-  } | null;
-}
+  Injectable,
+  Inject,
+  NotFoundException,
+  forwardRef,
+} from '@nestjs/common';
+import { CHARACTER_REPOSITORY } from 'src/context/characters/app/interface/character-repository.interface';
+import type { ICharacterRepository } from 'src/context/characters/app/interface/character-repository.interface';
+import { ROOM_REPOSITORY } from '../interface/room-repository.interface';
+import type { IRoomRepository } from '../interface/room-repository.interface';
+import { Room } from '../../domain/room.entity';
 
 @Injectable()
 export class LookAroundUseCase {
   constructor(
+    @Inject(forwardRef(() => CHARACTER_REPOSITORY))
+    private readonly characterRepo: ICharacterRepository,
+
     @Inject(ROOM_REPOSITORY)
-    private readonly roomRepository: IRoomRepository,
-    private readonly getMonsterUseCase: GetMonsterAtCoordinatesUseCase,
+    private readonly roomRepo: IRoomRepository,
   ) {}
 
-  async execute(input: LookAroundInputDto): Promise<LookAroundOutputDto> {
-    const room = await this.roomRepository.findByCoordinates(input.x, input.y);
+  async execute(userId: number) {
+    const character = await this.characterRepo.findByUserId(userId);
+    if (!character) throw new NotFoundException('Character not found');
 
-    const monster = await this.getMonsterUseCase.execute(input.x, input.y);
-
-    const monsterData = monster
-      ? {
-          name: monster.name,
-          health: monster.health.current,
-          maxHealth: monster.health.max,
-        }
-      : null;
+    const { x, y } = character.coordinates;
+    let room = await this.roomRepo.findByCoordinates(x, y);
 
     if (!room) {
-      return {
-        name: 'The Void',
-        description: 'An endless expanse of nothingness.',
-        monster: monsterData,
-      };
+      room = Room.create(
+        x,
+        y,
+        x === 0 && y === 0 ? 'The Safe Haven' : 'Uncharted Dungeon',
+        'A mysterious room forged from the void...',
+      );
+      await this.roomRepo.save(room);
     }
 
     return {
+      x: room.x,
+      y: room.y,
       name: room.name,
       description: room.description,
-      monster: monsterData,
     };
   }
 }

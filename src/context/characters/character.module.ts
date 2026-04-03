@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CharacterOrmEntity } from './infra/persistence/entities/character.orm-entity';
 import { CharactersController } from './api/characters.controller';
@@ -8,9 +8,13 @@ import { CharacterRepository } from './infra/persistence/repo/character.reposito
 import { GetCharacterUseCase } from './app/usecases/get-character.usecase';
 import { MoveCharacterUseCase } from './app/usecases/move-character.usecase';
 import { GetCharactersAtCoordinatesUseCase } from './app/usecases/get-characters-at-coordinates.usecase';
+import { WorldModule } from '../world/world.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([CharacterOrmEntity])],
+  imports: [
+    TypeOrmModule.forFeature([CharacterOrmEntity]),
+    forwardRef(() => WorldModule),
+  ],
   controllers: [CharactersController],
   providers: [
     CreateCharacterUseCase,
@@ -22,6 +26,10 @@ import { GetCharactersAtCoordinatesUseCase } from './app/usecases/get-characters
       useClass: CharacterRepository,
     },
   ],
-  exports: [GetCharacterUseCase, GetCharactersAtCoordinatesUseCase],
+  exports: [
+    CHARACTER_REPOSITORY,
+    GetCharacterUseCase,
+    GetCharactersAtCoordinatesUseCase,
+  ],
 })
 export class CharacterModule {}

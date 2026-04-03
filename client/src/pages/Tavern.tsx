@@ -40,17 +40,14 @@ export default function Tavern() {
         setError(null);
         setLoading(true);
         try {
-            const data = await apiClient('/characters', {
+            await apiClient('/characters', {
                 method: 'POST',
                 body: JSON.stringify({ name: charName }),
             });
-            if (data && data.id) {
-                setCharacter({ id: data.id, name: data.name });
-            }
+            await checkHero();
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
             setError(err.message || "The spirits reject this name.");
-        } finally {
             setLoading(false);
         }
     };

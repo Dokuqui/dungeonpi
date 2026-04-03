@@ -1,6 +1,14 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  NotFoundException,
+  forwardRef,
+} from '@nestjs/common';
 import { CHARACTER_REPOSITORY } from '../interface/character-repository.interface';
 import type { ICharacterRepository } from '../interface/character-repository.interface';
+import { ROOM_REPOSITORY } from 'src/context/world/app/interface/room-repository.interface';
+import type { IRoomRepository } from 'src/context/world/app/interface/room-repository.interface';
+import { Room } from 'src/context/world/domain/room.entity';
 
 export interface MoveCharacterInputDto {
   userId: number;
@@ -12,6 +20,9 @@ export class MoveCharacterUseCase {
   constructor(
     @Inject(CHARACTER_REPOSITORY)
     private readonly characterRepository: ICharacterRepository,
+
+    @Inject(forwardRef(() => ROOM_REPOSITORY))
+    private readonly roomRepository: IRoomRepository,
   ) {}
 
   async execute(
@@ -43,8 +54,37 @@ export class MoveCharacterUseCase {
         throw new Error('Invalid direction.');
     }
 
+    const targetX = character.coordinates.x + dx;
+    const targetY = character.coordinates.y + dy;
+
+    let targetRoom = await this.roomRepository.findByCoordinates(
+      targetX,
+      targetY,
+    );
+
+    if (!targetRoom) {
+      const names = [
+        'Dusty Crypt',
+        'Forsaken Hallway',
+        'Spider Den',
+        'Echoing Chamber',
+      ];
+      const randomName = names[Math.floor(Math.random() * names.length)];
+
+      targetRoom = Room.create(
+        targetX,
+        targetY,
+        randomName,
+        'The shadows stretch infinitely in the dim light...',
+      );
+
+      await this.roomRepository.save(targetRoom);
+    }
+
     character.move(dx, dy);
+
     await this.characterRepository.save(character);
+
     return {
       x: character.coordinates.x,
       y: character.coordinates.y,

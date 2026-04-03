@@ -35,6 +35,73 @@ html {
   transition: all 0.4s ease-in-out;
 }
 
+.header-left {
+  position: relative;
+  .avatar-circle {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #222;
+    border: 1px solid $color-iron;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: $color-blood;
+  }
+}
+
+.header-dropdown {
+  position: absolute;
+  top: 45px;
+  left: 0;
+  background: #111;
+  border: 1px solid $color-iron;
+  width: 200px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.8);
+  z-index: 2000;
+  padding: 10px 0;
+
+  .dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    color: #aaa;
+    &:hover {
+      background: #1a1a1a;
+      color: $color-parchment;
+    }
+    &.logout {
+      color: $color-blood;
+      &:hover {
+        background: $color-blood;
+        color: #fff;
+      }
+    }
+
+    .badge {
+      background: $color-blood;
+      color: white;
+      font-size: 0.7rem;
+      padding: 1px 6px;
+      border-radius: 10px;
+      margin-left: auto;
+    }
+  }
+  hr {
+    border: none;
+    border-top: 1px solid #222;
+    margin: 5px 0;
+  }
+}
+
+.game-chat {
+  .section-title {
+    color: $color-blood !important;
+  }
+}
+
 .game-screen {
   display: grid;
   grid-template-areas:
@@ -177,7 +244,7 @@ html {
   justify-content: center;
   padding: 12px 6px;
   width: 32px;
-  height: 60px; // Added a fixed height for a better "tab" look
+  height: 60px;
 
   &:hover {
     background: $color-blood;
@@ -185,7 +252,6 @@ html {
     border-color: #ff4a4a;
   }
 
-  // THIS IS THE MISSING PIECE:
   &.left-btn {
     left: var(--inspector-width, 300px);
     border-left: none;

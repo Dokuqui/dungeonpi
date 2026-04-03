@@ -21,6 +21,7 @@ export default function Gate() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState<string | null>(null);
+    const [success, setSuccess] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
 
     const setAuth = useAuthStore((state) => state.setAuth);
@@ -28,23 +29,33 @@ export default function Gate() {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setError(null);
+        setSuccess(null);
         setLoading(true);
 
         try {
-            const endpoint = isLogin ? '/auth/login' : '/auth/register';
+            if (isLogin) {
+                const response = await apiClient('/auth/login', {
+                    method: 'POST',
+                    body: JSON.stringify({ email, password }),
+                });
 
-            const response = await apiClient(endpoint, {
-                method: 'POST',
-                body: JSON.stringify({ email, password }),
-            });
+                const token = response.accessToken;
+                const payload = decodeJwt(token);
 
-            const token = response.accessToken;
-            const payload = decodeJwt(token);
+                if (payload) {
+                    setAuth(token, payload.role, payload.sub);
+                }
+            } else {
+                await apiClient('/auth/register', {
+                    method: 'POST',
+                    body: JSON.stringify({ email, password }),
+                });
 
-            if (payload) {
-                setAuth(token, payload.role, payload.sub);
+                setSuccess("Soul forged successfully! You may now enter.");
+                setIsLogin(true);
+                setPassword('');
             }
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
             setError(err.message || 'The gates remain closed.');
         } finally {
@@ -58,27 +69,16 @@ export default function Gate() {
                 <h2>{isLogin ? 'Enter the Dungeon' : 'Forge a Soul'}</h2>
 
                 {error && <div className="error-message">{error}</div>}
+                {success && <div style={{ color: '#4caf50', marginBottom: '15px', textAlign: 'center' }}>{success}</div>}
 
-                <input
-                    type="email"
-                    placeholder="Email Address"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                />
-                <input
-                    type="password"
-                    placeholder="Secret Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                />
+                <input type="email" placeholder="Email Address" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                <input type="password" placeholder="Secret Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
 
                 <button type="submit" disabled={loading}>
                     {loading ? 'Channeling...' : (isLogin ? 'Enter' : 'Register')}
                 </button>
 
-                <div className="toggle-link" onClick={() => setIsLogin(!isLogin)}>
+                <div className="toggle-link" onClick={() => { setIsLogin(!isLogin); setError(null); setSuccess(null); }}>
                     {isLogin ? "No soul yet? Register here." : "Already have a soul? Enter here."}
                 </div>
             </form>

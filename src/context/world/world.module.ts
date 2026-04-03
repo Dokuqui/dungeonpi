@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CharacterModule } from '../characters/character.module';
 import { RoomOrmEntity } from './infra/persistence/entities/room.orm-entity';
@@ -12,8 +12,8 @@ import { MonstersModule } from '../monsters/monsters.module';
 @Module({
   imports: [
     TypeOrmModule.forFeature([RoomOrmEntity]),
-    CharacterModule,
     MonstersModule,
+    forwardRef(() => CharacterModule),
   ],
   controllers: [WorldController],
   providers: [
@@ -24,5 +24,6 @@ import { MonstersModule } from '../monsters/monsters.module';
       useClass: RoomRepository,
     },
   ],
+  exports: [ROOM_REPOSITORY],
 })
 export class WorldModule {}

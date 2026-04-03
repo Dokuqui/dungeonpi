@@ -55,13 +55,8 @@ export class WorldController {
 
   @Get('look')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Look around your current location' })
-  @ApiResponse({ status: 200, description: 'Returns what is in the room.' })
+  @ApiOperation({ summary: 'Look around the current room' })
   async lookAround(@Req() req: RequestWithUser) {
-    const character = await this.getCharacterUseCase.execute(req.user.userId);
-    return this.lookAroundUseCase.execute({
-      x: character.coordinates.x,
-      y: character.coordinates.y,
-    });
+    return this.lookAroundUseCase.execute(req.user.userId);
   }
 }
