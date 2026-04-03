@@ -37,11 +37,18 @@ export class LookAroundUseCase {
       await this.roomRepo.save(room);
     }
 
+    const playersInRoom = await this.characterRepo.findByCoordinates(x, y);
+
     return {
+      id: room.id,
       x: room.x,
       y: room.y,
       name: room.name,
       description: room.description,
+      players: playersInRoom.map((p) => ({
+        userId: p.userId,
+        name: p.name,
+      })),
     };
   }
 }

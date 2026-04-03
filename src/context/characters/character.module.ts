@@ -9,11 +9,13 @@ import { GetCharacterUseCase } from './app/usecases/get-character.usecase';
 import { MoveCharacterUseCase } from './app/usecases/move-character.usecase';
 import { GetCharactersAtCoordinatesUseCase } from './app/usecases/get-characters-at-coordinates.usecase';
 import { WorldModule } from '../world/world.module';
+import { ChatModule } from '../chat/chat.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([CharacterOrmEntity]),
     forwardRef(() => WorldModule),
+    forwardRef(() => ChatModule),
   ],
   controllers: [CharactersController],
   providers: [

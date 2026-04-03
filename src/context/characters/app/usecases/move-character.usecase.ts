@@ -9,6 +9,7 @@ import type { ICharacterRepository } from '../interface/character-repository.int
 import { ROOM_REPOSITORY } from 'src/context/world/app/interface/room-repository.interface';
 import type { IRoomRepository } from 'src/context/world/app/interface/room-repository.interface';
 import { Room } from 'src/context/world/domain/room.entity';
+import { ChatGateway } from 'src/context/chat/api/chat.gateway';
 
 export interface MoveCharacterInputDto {
   userId: number;
@@ -23,6 +24,9 @@ export class MoveCharacterUseCase {
 
     @Inject(forwardRef(() => ROOM_REPOSITORY))
     private readonly roomRepository: IRoomRepository,
+
+    @Inject(forwardRef(() => ChatGateway))
+    private readonly chatGateway: ChatGateway,
   ) {}
 
   async execute(
@@ -34,6 +38,13 @@ export class MoveCharacterUseCase {
         'You do not have an active character. Please create one.',
       );
     }
+
+    const oldX = character.coordinates.x;
+    const oldY = character.coordinates.y;
+    const previousRoom = await this.roomRepository.findByCoordinates(
+      oldX,
+      oldY,
+    );
 
     let dx = 0;
     let dy = 0;
@@ -82,8 +93,17 @@ export class MoveCharacterUseCase {
     }
 
     character.move(dx, dy);
-
     await this.characterRepository.save(character);
+
+    if (previousRoom?.id) {
+      this.chatGateway.server
+        .to(previousRoom.id.toString())
+        .emit('room_update');
+    }
+
+    if (targetRoom?.id) {
+      this.chatGateway.server.to(targetRoom.id.toString()).emit('room_update');
+    }
 
     return {
       x: character.coordinates.x,

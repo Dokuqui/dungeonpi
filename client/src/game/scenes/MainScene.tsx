@@ -60,7 +60,11 @@ export class MainScene extends Phaser.Scene {
         });
 
         this.refreshWorld();
-        if (this.input.keyboard) this.cursors = this.input.keyboard.createCursorKeys();
+        if (this.input.keyboard) {
+            this.cursors = this.input.keyboard.createCursorKeys();
+            
+            this.input.keyboard.disableGlobalCapture(); 
+        }
     }
 
     private getPixelX(gridX: number) {

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MessageOrmEntity } from './infra/persistence/entities/message.orm-entity';
 import { NotificationOrmEntity } from './infra/persistence/entities/notification.orm-entity';
@@ -21,7 +21,7 @@ import { CharacterModule } from '../characters/character.module';
   imports: [
     TypeOrmModule.forFeature([MessageOrmEntity, NotificationOrmEntity]),
     AuthModule,
-    CharacterModule,
+    forwardRef(() => CharacterModule),
   ],
   controllers: [ChatController],
   providers: [
@@ -35,5 +35,6 @@ import { CharacterModule } from '../characters/character.module';
     { provide: MESSAGE_REPOSITORY, useClass: MessageRepository },
     { provide: NOTIFICATION_REPOSITORY, useClass: NotificationRepository },
   ],
+  exports: [ChatGateway],
 })
 export class ChatModule {}

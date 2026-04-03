@@ -35,6 +35,93 @@ html {
   transition: all 0.4s ease-in-out;
 }
 
+/* === GAME GRID LAYOUT === */
+.game-screen {
+  display: grid;
+  grid-template-areas:
+    'header header header'
+    'inspector world sidebar';
+  grid-template-rows: 50px 1fr;
+  grid-template-columns: var(--inspector-width, 300px) 1fr var(
+      --sidebar-width,
+      300px
+    );
+
+  width: 100vw;
+  height: 100vh;
+  transition: grid-template-columns 0.4s ease-in-out;
+  overflow: hidden;
+  position: relative;
+
+  > * {
+    min-height: 0;
+    min-width: 0;
+  }
+
+  .game-header {
+    grid-area: header;
+    @include game-panel;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    z-index: 10;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+  }
+
+  .game-inspector {
+    grid-area: inspector;
+    @include game-panel;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border-top: none;
+    border-bottom: none;
+    border-left: none;
+  }
+
+  .game-sidebar {
+    grid-area: sidebar;
+    @include game-panel;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    border-top: none;
+    border-bottom: none;
+    border-right: none;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .game-world {
+    grid-area: world;
+    background: radial-gradient(circle, #1a1a1a 0%, #050505 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+    padding: 10px;
+
+    .phaser-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      canvas {
+        max-width: 100% !important;
+        max-height: 100% !important;
+        object-fit: contain;
+        box-shadow: 0 0 40px #000;
+        border: 1px solid $color-iron;
+      }
+    }
+  }
+}
+
+/* === HEADER ELEMENTS === */
 .header-left {
   position: relative;
   .avatar-circle {
@@ -68,6 +155,7 @@ html {
     padding: 10px 20px;
     font-size: 0.9rem;
     color: #aaa;
+    cursor: pointer;
     &:hover {
       background: #1a1a1a;
       color: $color-parchment;
@@ -79,15 +167,6 @@ html {
         color: #fff;
       }
     }
-
-    .badge {
-      background: $color-blood;
-      color: white;
-      font-size: 0.7rem;
-      padding: 1px 6px;
-      border-radius: 10px;
-      margin-left: auto;
-    }
   }
   hr {
     border: none;
@@ -96,137 +175,7 @@ html {
   }
 }
 
-.game-chat {
-  .section-title {
-    color: $color-blood !important;
-  }
-}
-
-.game-screen {
-  display: grid;
-  grid-template-areas:
-    'header header header'
-    'inspector world sidebar'
-    'chat chat chat';
-  grid-template-rows: 50px 1fr 120px;
-
-  grid-template-columns: var(--inspector-width, 300px) 1fr var(
-      --sidebar-width,
-      250px
-    );
-
-  width: 100vw;
-  height: 100vh;
-  transition: grid-template-columns 0.4s ease-in-out;
-  overflow: hidden;
-  position: relative;
-
-  > * {
-    min-height: 0;
-    min-width: 0;
-  }
-
-  .game-header {
-    grid-area: header;
-    @include game-panel;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
-    z-index: 10;
-    border-top: none;
-    border-left: none;
-    border-right: none;
-  }
-
-  .game-inspector {
-    grid-area: inspector;
-    @include game-panel;
-    overflow-y: auto;
-    overflow-x: hidden;
-
-    width: var(--inspector-width, 300px);
-    padding: var(--inspector-padding, 20px);
-    border-right-width: var(--inspector-border, 1px);
-    opacity: var(--inspector-opacity, 1);
-
-    transition: all 0.4s ease-in-out;
-    border-top: none;
-    border-bottom: none;
-    border-left: none;
-  }
-
-  .game-sidebar {
-    grid-area: sidebar;
-    @include game-panel;
-    overflow-y: auto;
-    overflow-x: hidden;
-
-    width: var(--sidebar-width, 250px);
-    padding: var(--sidebar-padding, 20px);
-    border-left-width: var(--sidebar-border, 1px);
-    opacity: var(--sidebar-opacity, 1);
-
-    transition: all 0.4s ease-in-out;
-    border-top: none;
-    border-bottom: none;
-    border-right: none;
-  }
-
-  .game-world {
-    grid-area: world;
-    background: radial-gradient(circle, #1a1a1a 0%, #050505 100%);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    position: relative;
-    padding: 10px;
-
-    .phaser-container {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-      canvas {
-        max-width: 100% !important;
-        max-height: 100% !important;
-        object-fit: contain;
-        box-shadow: 0 0 40px #000;
-        border: 1px solid $color-iron;
-      }
-    }
-  }
-
-  .game-chat {
-    grid-area: chat;
-    @include game-panel;
-    border-bottom: none;
-    border-left: none;
-    border-right: none;
-  }
-}
-
-.logout-btn {
-  background: transparent;
-  border: 1px solid $color-iron;
-  color: $color-parchment;
-  padding: 6px 12px;
-  cursor: pointer;
-  font-family: 'MedievalSharp';
-  display: flex;
-  align-items: center;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background: rgba(138, 3, 3, 0.2);
-    border-color: $color-blood;
-    color: #fff;
-  }
-}
-
+/* === TOGGLE BUTTONS === */
 .toggle-btn {
   position: absolute;
   top: 50%;
@@ -259,7 +208,7 @@ html {
   }
 
   &.right-btn {
-    right: var(--sidebar-width, 250px);
+    right: var(--sidebar-width, 300px);
     border-right: none;
     border-radius: 8px 0 0 8px;
   }
@@ -270,11 +219,11 @@ html {
   }
 
   &:hover svg {
-    color: #fff;
     transform: scale(1.1);
   }
 }
 
+/* === INSPECTOR DETAILS === */
 .room-details {
   h3 {
     color: $color-blood;
@@ -296,14 +245,221 @@ html {
     margin-bottom: 5px;
     letter-spacing: 1px;
   }
+}
 
-  .monster-list {
-    list-style: none;
-    li {
-      color: #ff4a4a;
-      padding: 8px 0;
-      border-bottom: 1px solid rgba(255, 74, 74, 0.1);
-      font-size: 0.95rem;
+/* === CHAT & SIDEBAR === */
+.section-title {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  color: #666;
+  margin-bottom: 5px;
+  letter-spacing: 1px;
+}
+
+.chat-tabs {
+  display: flex;
+  gap: 10px;
+  border-bottom: 1px solid #333;
+  margin-bottom: 10px;
+  padding-bottom: 5px;
+
+  button {
+    background: none;
+    border: none;
+    color: #666;
+    font-family: 'MedievalSharp', cursive;
+    cursor: pointer;
+    font-size: 0.9rem;
+
+    &.active {
+      color: #d4c4a1;
+      text-shadow: 0 0 5px rgba(212, 196, 161, 0.5);
+    }
+  }
+}
+
+.chat-input {
+  display: flex;
+  margin-top: 10px;
+
+  input {
+    flex: 1;
+    background: #0a0a0a;
+    border: 1px solid #333;
+    color: #d4c4a1;
+    padding: 8px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.8rem;
+    outline: none;
+  }
+
+  button {
+    background: #2a0808;
+    color: #d4c4a1;
+    border: 1px solid #8a0303;
+    cursor: pointer;
+    padding: 0 10px;
+    font-size: 0.8rem;
+    transition: background 0.2s ease;
+    &:hover {
+      background: #4a0c0c;
+    }
+  }
+}
+
+.notification-badge {
+  background: $color-blood;
+  color: #fff;
+  font-size: 0.65rem;
+  padding: 2px 6px;
+  border-radius: 10px;
+  position: absolute;
+  top: -5px;
+  right: -15px;
+  font-weight: bold;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+  border: 1px solid #ff4a4a;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(138, 3, 3, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 5px rgba(138, 3, 3, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(138, 3, 3, 0);
+  }
+}
+
+/* === ENHANCED MAILBOX MODAL === */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(3px); /* Subtle background blur */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.modal-content {
+  background: linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%);
+  border: 2px solid $color-iron;
+  border-top: 2px solid $color-blood;
+  border-radius: 4px;
+  width: 450px;
+  max-width: 90%;
+  color: $color-parchment;
+  box-shadow:
+    0 15px 35px rgba(0, 0, 0, 0.9),
+    inset 0 0 20px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: rgba(0, 0, 0, 0.3);
+    border-bottom: 1px solid #333;
+
+    h2 {
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: $color-parchment;
+      font-size: 1.4rem;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      color: #888;
+      font-size: 1.2rem;
+      cursor: pointer;
+      font-family: 'MedievalSharp', cursive;
+      transition: color 0.2s;
+
+      &:hover {
+        color: $color-blood;
+      }
+    }
+  }
+
+  .modal-body {
+    padding: 20px;
+    max-height: 60vh;
+    overflow-y: auto;
+
+    /* Custom scrollbar for the modal */
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+    &::-webkit-scrollbar-track {
+      background: #111;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: $color-iron;
+      border-radius: 4px;
+    }
+    &::-webkit-scrollbar-thumb:hover {
+      background: $color-blood;
+    }
+  }
+
+  .empty-message {
+    text-align: center;
+    color: #666;
+    font-style: italic;
+    padding: 20px 0;
+  }
+
+  .mail-item {
+    background: rgba(20, 20, 20, 0.8);
+    padding: 12px 15px;
+    border: 1px solid #333;
+    border-left: 3px solid $color-blood;
+    border-radius: 3px;
+    margin-bottom: 12px;
+    transition:
+      transform 0.2s ease,
+      background 0.2s ease;
+
+    &:hover {
+      transform: translateX(2px);
+      background: rgba(30, 30, 30, 0.95);
+      border-color: #444;
+    }
+
+    .mail-time {
+      color: #777;
+      font-size: 0.75rem;
+      display: block;
+      margin-bottom: 6px;
+      border-bottom: 1px dashed #222;
+      padding-bottom: 4px;
+    }
+
+    .mail-text {
+      margin: 0;
+      font-size: 0.9rem;
+      line-height: 1.4;
+      color: #eee;
+    }
+
+    .mail-sender {
+      color: $color-blood;
+      font-weight: bold;
     }
   }
 }
