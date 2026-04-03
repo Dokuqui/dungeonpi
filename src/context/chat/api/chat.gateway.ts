@@ -99,7 +99,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   ): void {
     const roomStr = data.roomId.toString();
 
-    // Leave old rooms
     client.rooms.forEach((room) => {
       if (room !== client.id && !room.startsWith('user_')) {
         void client.leave(room);
@@ -108,7 +107,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     void client.join(roomStr);
 
-    // 🛠️ Notify others that someone new is here
     this.server.to(roomStr).emit('room_update');
 
     console.log(`[Chat] ${client.id} joined room ${roomStr}`);

@@ -154,7 +154,6 @@ export default function App() {
       '--sidebar-width': showSidebar ? '350px' : '0px',
     } as React.CSSProperties}>
 
-      {/* --- REFACTORED MAILBOX MODAL --- */}
       {showMailbox && (
         <div className="modal-overlay" onClick={() => setShowMailbox(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -184,7 +183,6 @@ export default function App() {
             <div className="avatar-circle"><User size={16} /></div>
             <h2 style={{ color: '#8a0303', margin: 0 }}>{character.name}</h2>
             <ChevronDown size={14} />
-            {/* --- PULSING NOTIFICATION BADGE --- */}
             {unreadMail > 0 && (
               <div className="notification-badge">
                 {unreadMail}
