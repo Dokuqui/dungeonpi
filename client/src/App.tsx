@@ -10,8 +10,9 @@ import Dungeon from './components/Dungeon';
 import WorldInspector from './components/WorldInspector';
 import {
   PanelLeftClose, PanelLeftOpen, PanelRightClose, PanelRightOpen,
-  LogOut, ChevronDown, Mail, Settings, User, Crown, RefreshCw
+  LogOut, ChevronDown, Mail, Settings, User, Crown, RefreshCw, ShoppingCart
 } from 'lucide-react';
+import MarketModal from './components/MarketModal';
 
 export default function App() {
   const { token, character, userId, role, logout } = useAuthStore();
@@ -38,6 +39,8 @@ export default function App() {
   const [safeRoomId, setSafeRoomId] = useState<number | null>(null);
 
   const [contacts, setContacts] = useState<any[]>([]);
+
+  const [showMarket, setShowMarket] = useState(false);
 
   const handleRoomData = (data: any) => {
     if (!data) return;
@@ -143,6 +146,11 @@ export default function App() {
     setMenuOpen(false);
   };
 
+  const openMarketModal = () => {
+    setShowMarket(true);
+    setMenuOpen(false);
+  };
+
   if (!token) return <Gate />;
   if (!character) return <Tavern />;
 
@@ -177,6 +185,8 @@ export default function App() {
         </div>
       )}
 
+      {showMarket && <MarketModal onClose={() => setShowMarket(false)} />}
+
       <header className="game-header">
         <div className="header-left">
           <div onClick={() => setMenuOpen(!menuOpen)} style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', position: 'relative' }}>
@@ -193,6 +203,9 @@ export default function App() {
             <div className="header-dropdown">
               <div className="dropdown-item" onClick={openMailboxModal}>
                 <Mail size={14} /> Mailbox {unreadMail > 0 && <span style={{ color: 'red' }}>({unreadMail})</span>}
+              </div>
+              <div className="dropdown-item" onClick={openMarketModal}>
+                <ShoppingCart size={14} /> Market
               </div>
               <div className="dropdown-item"><Settings size={14} /> Settings</div>
               <hr />

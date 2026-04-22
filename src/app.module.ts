@@ -9,6 +9,7 @@ import { WorldModule } from './context/world/world.module';
 import { MonstersModule } from './context/monsters/monsters.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ChatModule } from './context/chat/chat.module';
+import { PaymentsModule } from './context/payment/payment.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { ChatModule } from './context/chat/chat.module';
     WorldModule,
     MonstersModule,
     ChatModule,
+    PaymentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

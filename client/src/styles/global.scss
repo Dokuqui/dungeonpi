@@ -463,3 +463,199 @@ html {
     }
   }
 }
+
+/* === MARKET MODAL STYLES === */
+.market-modal {
+  width: 650px !important;
+  max-width: 95% !important;
+
+  .market-tabs {
+    display: flex;
+    background: #0a0a0a;
+    border-bottom: 1px solid #333;
+    button {
+      flex: 1;
+      padding: 12px;
+      background: none;
+      border: none;
+      color: #666;
+      font-family: 'MedievalSharp', cursive;
+      font-size: 1rem;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: 0.2s;
+
+      &:hover {
+        color: #aaa;
+      }
+      &.active {
+        color: #f1c40f;
+        background: #151515;
+        border-bottom: 2px solid #f1c40f;
+      }
+    }
+  }
+
+  .market-body {
+    padding: 20px;
+    background: #111;
+  }
+
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 15px;
+  }
+
+  .product-card {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 4px;
+    padding: 15px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    transition:
+      transform 0.2s,
+      box-shadow 0.2s;
+
+    .product-image {
+      width: 64px;
+      height: 64px;
+      image-rendering: pixelated;
+      margin-bottom: 10px;
+      filter: drop-shadow(0px 5px 2px rgba(0, 0, 0, 0.5));
+    }
+
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+      border-color: #555;
+    }
+
+    &.premium {
+      border-color: #f1c40f;
+      background: radial-gradient(circle, #2a2208 0%, #1a1a1a 100%);
+    }
+
+    h3 {
+      margin: 0 0 5px 0;
+      color: #d4c4a1;
+      font-size: 1.1rem;
+    }
+    p {
+      font-size: 0.75rem;
+      color: #888;
+      margin-bottom: 15px;
+      line-height: 1.3;
+      flex: 1;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 3px;
+      font-family: 'MedievalSharp', cursive;
+      cursor: pointer;
+      font-weight: bold;
+      transition: filter 0.2s;
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      &:hover:not(:disabled) {
+        filter: brightness(1.2);
+      }
+
+      &.buy-gold {
+        background: #333;
+        color: #f1c40f;
+        border: 1px solid #555;
+      }
+      &.buy-stripe {
+        background: #f1c40f;
+        color: #111;
+        box-shadow: 0 0 10px rgba(241, 196, 15, 0.3);
+      }
+    }
+  }
+
+  .battle-pass-card {
+    background: linear-gradient(45deg, #1a0a2a, #2a004a);
+    border: 2px solid #8e44ad;
+    padding: 30px;
+    border-radius: 6px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+
+    .bp-hero {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 120px;
+      height: 120px;
+      image-rendering: pixelated;
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    h3 {
+      color: #f1c40f;
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+      text-shadow: 0 2px 5px #000;
+      position: relative;
+      z-index: 2;
+    }
+    p {
+      font-size: 1rem;
+      color: #ddd;
+      position: relative;
+      z-index: 2;
+    }
+
+    .bp-perks {
+      list-style: none;
+      padding: 0;
+      margin: 15px 0;
+      color: #bfa1d8;
+      position: relative;
+      z-index: 2;
+      li {
+        margin-bottom: 5px;
+      }
+    }
+
+    .massive-btn {
+      background: #f1c40f;
+      color: #111;
+      font-size: 1.2rem;
+      padding: 15px 30px;
+      margin-top: 20px;
+      border: none;
+      font-weight: bold;
+      border-radius: 4px;
+      cursor: pointer;
+      position: relative;
+      z-index: 2;
+      box-shadow: 0 0 15px rgba(241, 196, 15, 0.5);
+      font-family: 'MedievalSharp', cursive;
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+      &:hover:not(:disabled) {
+        transform: scale(1.05);
+      }
+    }
+  }
+}
