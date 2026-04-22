@@ -659,3 +659,42 @@ html {
     }
   }
 }
+
+/* === PAYMENT TOAST NOTIFICATION === */
+.payment-toast {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10000;
+  padding: 15px 30px;
+  border-radius: 4px;
+  font-family: 'MedievalSharp', cursive;
+  font-size: 1.1rem;
+  color: #d4c4a1;
+  text-shadow: 0 2px 4px #000;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+  cursor: pointer;
+  animation: slideDown 0.4s ease-out;
+
+  &.success {
+    background: linear-gradient(to right, #1a2a08, #2a4a08);
+    border: 2px solid #558b2f;
+  }
+
+  &.error {
+    background: linear-gradient(to right, #2a0808, #4a0808);
+    border: 2px solid #8a0303;
+  }
+
+  @keyframes slideDown {
+    from {
+      top: -50px;
+      opacity: 0;
+    }
+    to {
+      top: 20px;
+      opacity: 1;
+    }
+  }
+}

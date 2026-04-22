@@ -8,12 +8,14 @@ import { LookAroundUseCase } from './app/usecases/look-around.usecase';
 import { ROOM_REPOSITORY } from './app/interface/room-repository.interface';
 import { RoomRepository } from './infra/persistence/repo/room.repository';
 import { MonstersModule } from '../monsters/monsters.module';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([RoomOrmEntity]),
     MonstersModule,
     forwardRef(() => CharacterModule),
+    forwardRef(() => AuthModule),
   ],
   controllers: [WorldController],
   providers: [

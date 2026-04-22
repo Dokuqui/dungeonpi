@@ -20,7 +20,7 @@ import { CharacterModule } from '../characters/character.module';
 @Module({
   imports: [
     TypeOrmModule.forFeature([MessageOrmEntity, NotificationOrmEntity]),
-    AuthModule,
+    forwardRef(() => AuthModule),
     forwardRef(() => CharacterModule),
   ],
   controllers: [ChatController],

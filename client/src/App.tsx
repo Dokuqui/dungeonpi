@@ -42,6 +42,11 @@ export default function App() {
 
   const [showMarket, setShowMarket] = useState(false);
 
+  const [paymentNotification, setPaymentNotification] = useState<{ type: 'success' | 'error', message: string } | null>(null);
+
+  const securityAlert = useAuthStore((state) => state.securityAlert);
+  const setSecurityAlert = useAuthStore((state) => state.setSecurityAlert);
+
   const handleRoomData = (data: any) => {
     if (!data) return;
     if (Array.isArray(data.players)) setRoomPlayers(data.players);
@@ -79,6 +84,38 @@ export default function App() {
       joinRoom(joinId);
     }
   }, [safeRoomId, room, joinRoom]);
+
+  useEffect(() => {
+    const queryParams = new URLSearchParams(window.location.search);
+    const paymentStatus = queryParams.get('payment');
+
+    if (paymentStatus) {
+      setTimeout(() => {
+        if (paymentStatus === 'cancelled') {
+          setPaymentNotification({ type: 'error', message: 'Payment Cancelled: The Merchant returns your coin to your purse.' });
+        } else if (paymentStatus === 'success') {
+          setPaymentNotification({ type: 'success', message: 'Payment Successful! The Merchant is preparing your goods.' });
+        }
+      }, 0);
+
+      window.history.replaceState({}, document.title, window.location.pathname);
+
+      setTimeout(() => setPaymentNotification(null), 5000);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (securityAlert) {
+      setTimeout(() => {
+        setPaymentNotification({ type: 'error', message: securityAlert });
+      }, 0);
+
+      setTimeout(() => {
+        setSecurityAlert(null);
+        setPaymentNotification(null);
+      }, 8000);
+    }
+  }, [securityAlert, setSecurityAlert]);
 
   const fetchContactsList = () => {
     apiClient('/chat/contacts')
@@ -186,6 +223,13 @@ export default function App() {
       )}
 
       {showMarket && <MarketModal onClose={() => setShowMarket(false)} />}
+
+      {paymentNotification && (
+        <div className={`payment-toast ${paymentNotification.type}`} onClick={() => setPaymentNotification(null)}>
+          {paymentNotification.type === 'success' ? '✨ ' : '⚔️ '}
+          {paymentNotification.message}
+        </div>
+      )}
 
       <header className="game-header">
         <div className="header-left">

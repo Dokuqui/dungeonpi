@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MonstersController } from './api/monsters.controller';
 import { CreateSpawnerUseCase } from './app/usecases/create-spawner.usecase';
@@ -11,9 +11,13 @@ import { SpawnerCronService } from './infra/jobs/spawner.cron';
 import { SPAWNER_REPOSITORY } from './app/interface/spawner-repository.interface';
 import { MONSTER_REPOSITORY } from './app/interface/monster-repository.interface';
 import { GetMonsterAtCoordinatesUseCase } from './app/usecases/get-monster-at-coordinates.usecase';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([SpawnerOrmEntity, MonsterOrmEntity])],
+  imports: [
+    TypeOrmModule.forFeature([SpawnerOrmEntity, MonsterOrmEntity]),
+    forwardRef(() => AuthModule),
+  ],
   controllers: [MonstersController],
   providers: [
     CreateSpawnerUseCase,

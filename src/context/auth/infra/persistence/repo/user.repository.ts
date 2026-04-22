@@ -39,6 +39,8 @@ export class UserRepository implements IUserRepository {
       Password.createFromHash(ormEntity.password),
       ormEntity.role,
       ormEntity.createdAt,
+      ormEntity.riskScore,
+      ormEntity.tokenVersion,
     );
   }
 
@@ -51,6 +53,14 @@ export class UserRepository implements IUserRepository {
     ormEntity.password = domainEntity.password.value;
     ormEntity.role = domainEntity.role;
     ormEntity.createdAt = domainEntity.createdAt;
+    ormEntity.riskScore = domainEntity.riskScore;
+    ormEntity.tokenVersion = domainEntity.tokenVersion;
     return ormEntity;
+  }
+
+  async findById(id: number): Promise<AuthUser | null> {
+    const userOrm = await this.ormRepository.findOne({ where: { id } });
+    if (!userOrm) return null;
+    return this.toDomain(userOrm);
   }
 }

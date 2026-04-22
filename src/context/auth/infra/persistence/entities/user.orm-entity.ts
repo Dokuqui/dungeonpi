@@ -20,6 +20,12 @@ export class UserOrmEntity {
   @Column({ type: 'varchar', default: Role.PLAYER })
   role!: Role;
 
+  @Column({ default: 1 })
+  tokenVersion!: number;
+
+  @Column({ default: 0 })
+  riskScore!: number;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt!: Date;
 }

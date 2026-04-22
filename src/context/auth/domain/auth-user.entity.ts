@@ -9,10 +9,20 @@ export class AuthUser {
     private _password: Password,
     private readonly _role: Role,
     private readonly _createdAt: Date,
+    private _riskScore: number,
+    private _tokenVersion: number,
   ) {}
 
   public static create(email: Email, password: Password): AuthUser {
-    return new AuthUser(undefined, email, password, Role.PLAYER, new Date());
+    return new AuthUser(
+      undefined,
+      email,
+      password,
+      Role.PLAYER,
+      new Date(),
+      0,
+      1,
+    );
   }
 
   public static reconstitute(
@@ -21,8 +31,18 @@ export class AuthUser {
     password: Password,
     role: Role,
     createdAt: Date,
+    riskScore: number,
+    tokenVersion: number,
   ): AuthUser {
-    return new AuthUser(id, email, password, role, createdAt);
+    return new AuthUser(
+      id,
+      email,
+      password,
+      role,
+      createdAt,
+      riskScore,
+      tokenVersion,
+    );
   }
 
   public get id(): number | undefined {
@@ -43,6 +63,22 @@ export class AuthUser {
 
   public get createdAt(): Date {
     return this._createdAt;
+  }
+
+  public get riskScore(): number {
+    return this._riskScore;
+  }
+
+  public set riskScore(value: number) {
+    this._riskScore = value;
+  }
+
+  public get tokenVersion(): number {
+    return this._tokenVersion;
+  }
+
+  public incrementTokenVersion(): void {
+    this._tokenVersion += 1;
   }
 
   public updatePassword(newHashedPassword: Password): void {

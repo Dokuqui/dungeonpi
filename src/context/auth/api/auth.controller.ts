@@ -4,24 +4,32 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Inject,
   Post,
   Req,
+  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
+  ApiBody,
   ApiOperation,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
 
-import { Request } from 'express';
+import type { Request } from 'express';
 
 import { LoginUseCase } from '../app/usecases/login.usecase';
 import { RegisterUseCase } from '../app/usecases/register.usecase';
+import { RefreshUseCase } from '../app/usecases/referesh.usecase';
 import { LoginDto } from './dtos/login.dto';
 import { RegisterDto } from './dtos/register.dto';
 import { JwtAuthGuard } from '../../../core/guards/jwt-auth.guard';
+import {
+  type ITokenService,
+  TOKEN_SERVICE,
+} from '../app/interface/token-service.interface';
 
 interface RequestWithUser extends Request {
   user: {
@@ -35,6 +43,8 @@ export class AuthController {
   constructor(
     private readonly loginUseCase: LoginUseCase,
     private readonly registerUseCase: RegisterUseCase,
+    @Inject(TOKEN_SERVICE) private readonly tokenService: ITokenService,
+    private readonly refreshUseCase: RefreshUseCase,
   ) {}
 
   @Post('register')
@@ -63,10 +73,15 @@ export class AuthController {
     status: 401,
     description: 'Unauthorized: Invalid credentials.',
   })
-  async login(@Body() loginDto: LoginDto) {
+  async login(@Body() loginDto: LoginDto, @Req() req: Request) {
+    const ip = req.ip || req.socket?.remoteAddress || 'unknown';
+    const userAgent = req.headers['user-agent'] || 'unknown';
+
     return this.loginUseCase.execute({
       email: loginDto.email,
       passwordRaw: loginDto.password,
+      ip,
+      userAgent,
     });
   }
 
@@ -87,5 +102,34 @@ export class AuthController {
       message: 'You have accessed a protected route!',
       user: req.user,
     };
+  }
+
+  @Post('refresh')
+  @ApiOperation({ summary: 'Get a new access token using a refresh token' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        refreshToken: {
+          type: 'string',
+          description: 'Paste your long-lived Refresh Token here',
+        },
+      },
+    },
+  })
+  async refreshTokens(
+    @Body('refreshToken') token: string,
+    @Req() req: Request,
+  ) {
+    if (!token) throw new UnauthorizedException('No refresh token provided');
+
+    const ip = req.ip || req.socket?.remoteAddress || 'unknown';
+    const userAgent = req.headers['user-agent'] || 'unknown';
+
+    return this.refreshUseCase.execute({
+      refreshToken: token,
+      currentIp: ip,
+      currentUserAgent: userAgent,
+    });
   }
 }

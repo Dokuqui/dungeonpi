@@ -25,6 +25,7 @@ export default function Gate() {
     const [loading, setLoading] = useState(false);
 
     const setAuth = useAuthStore((state) => state.setAuth);
+    const setTokens = useAuthStore((state) => state.setTokens);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -39,11 +40,14 @@ export default function Gate() {
                     body: JSON.stringify({ email, password }),
                 });
 
-                const token = response.accessToken;
-                const payload = decodeJwt(token);
+                const accessToken = response.accessToken;
+                const refreshToken = response.refreshToken;
+
+                const payload = decodeJwt(accessToken);
 
                 if (payload) {
-                    setAuth(token, payload.role, payload.sub);
+                    setTokens(accessToken, refreshToken);
+                    setAuth(accessToken, payload.role, payload.sub);
                 }
             } else {
                 await apiClient('/auth/register', {

@@ -7,22 +7,24 @@ import {
   ConnectedSocket,
   MessageBody,
 } from '@nestjs/websockets';
-import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
 import { Server, Socket } from 'socket.io';
-import { Role } from 'src/context/auth/domain/role.enum';
 import { SendMessageUseCase } from '../app/usecases/send-message.usecase';
 import { GetCharacterUseCase } from 'src/context/characters/app/usecases/get-character.usecase';
 import { forwardRef, Inject } from '@nestjs/common';
-
-interface JwtPayload {
-  sub: number;
-  role: Role;
-}
+import {
+  TOKEN_SERVICE,
+  type ITokenService,
+} from '../../auth/app/interface/token-service.interface';
+import * as crypto from 'crypto';
 
 interface GatewayResponse {
   status: string;
   message: string;
+}
+
+interface ExpectedJwtPayload {
+  sub: number;
+  role: string;
 }
 
 @WebSocketGateway({ namespace: '/chat', cors: { origin: '*' } })
@@ -33,8 +35,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   private activeUsers = new Map<number, string>();
 
   constructor(
-    private readonly jwtService: JwtService,
-    private readonly configService: ConfigService,
+    @Inject(TOKEN_SERVICE) private readonly tokenService: ITokenService,
     private readonly sendMessageUseCase: SendMessageUseCase,
 
     @Inject(forwardRef(() => GetCharacterUseCase))
@@ -65,12 +66,18 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         ? rawToken.slice(7)
         : rawToken;
 
-      const secret = this.configService.get<string>('JWT_SECRET');
-      if (!secret) throw new Error('JWT Secret is not configured');
+      const ip = client.handshake.address || 'unknown';
+      const userAgent = client.handshake.headers['user-agent'] || 'unknown';
+      const currentFingerprint = crypto
+        .createHash('sha256')
+        .update(`${ip}-${userAgent}`)
+        .digest('hex');
 
-      const payload = await this.jwtService.verifyAsync<JwtPayload>(token, {
-        secret,
-      });
+      const payload = (await this.tokenService.verifyToken(
+        token,
+        currentFingerprint,
+      )) as ExpectedJwtPayload;
+
       const userId = Number(payload.sub);
 
       await client.join(`user_${String(userId)}`);

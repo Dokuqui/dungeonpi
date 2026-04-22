@@ -1,6 +1,5 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { JwtModule } from '@nestjs/jwt';
 
 import { AuthController } from './api/auth.controller';
 
@@ -14,27 +13,29 @@ import { UserRepository } from './infra/persistence/repo/user.repository';
 import { BcryptPasswordHasher } from './infra/persistence/security/bcrypt-password-hasher';
 import { JwtTokenService } from './infra/persistence/security/jwt-token.service';
 import { RegisterUseCase } from './app/usecases/register.usecase';
-import { JwtStrategy } from './infra/persistence/security/jwt.strategy';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConnectionLogOrmEntity } from './infra/persistence/entities/connection-log.orm-entity';
+import { DeviceSessionOrmEntity } from './infra/persistence/entities/device-session.orm-entity';
+import { CONNECTION_LOG_REPOSITORY } from './app/interface/connection-log-repository.interface';
+import { ConnectionLogRepository } from './infra/persistence/repo/connection-log.repository';
+import { DEVICE_SESSION_REPOSITORY } from './app/interface/device-session-repository.interface';
+import { DeviceSessionRepository } from './infra/persistence/repo/device-session.repository';
+import { ChatModule } from '../chat/chat.module';
+import { RefreshUseCase } from './app/usecases/referesh.usecase';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UserOrmEntity]),
-
-    JwtModule.registerAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        secret: configService.get<string>('JWT_SECRET'),
-        signOptions: { expiresIn: '1h' },
-      }),
-    }),
+    TypeOrmModule.forFeature([
+      UserOrmEntity,
+      ConnectionLogOrmEntity,
+      DeviceSessionOrmEntity,
+    ]),
+    forwardRef(() => ChatModule),
   ],
   controllers: [AuthController],
   providers: [
     LoginUseCase,
     RegisterUseCase,
-
+    RefreshUseCase,
     {
       provide: USER_REPOSITORY,
       useClass: UserRepository,
@@ -47,8 +48,15 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       provide: TOKEN_SERVICE,
       useClass: JwtTokenService,
     },
-    JwtStrategy,
+    {
+      provide: CONNECTION_LOG_REPOSITORY,
+      useClass: ConnectionLogRepository,
+    },
+    {
+      provide: DEVICE_SESSION_REPOSITORY,
+      useClass: DeviceSessionRepository,
+    },
   ],
-  exports: [TOKEN_SERVICE, PASSWORD_HASHER, JwtModule],
+  exports: [TOKEN_SERVICE, PASSWORD_HASHER],
 })
 export class AuthModule {}

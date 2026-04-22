@@ -86,6 +86,17 @@ export const useChatStore = create<ChatState>((set, get) => ({
       },
     );
 
+    socket.on(
+      'system_alert',
+      (data: { type: string; content: string; timestamp?: string }) => {
+        if (data.type === 'SECURITY_BREACH') {
+          useAuthStore.getState().setSecurityAlert(data.content);
+
+          useAuthStore.getState().logout();
+        }
+      },
+    );
+
     set({ socket });
   },
 

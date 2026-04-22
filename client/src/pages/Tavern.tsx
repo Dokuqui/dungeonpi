@@ -7,23 +7,27 @@ export default function Tavern() {
     const [loading, setLoading] = useState(true);
     const [charName, setCharName] = useState('');
     const [error, setError] = useState<string | null>(null);
-    const [foundHero, setFoundHero] = useState<{ id: number; name: string } | null>(null);
+    const [foundHero, setFoundHero] = useState<{ id: number; name: string; userId: number } | null>(null);
 
     const setCharacter = useAuthStore((state) => state.setCharacter);
+    const userId = useAuthStore((state) => state.userId);
 
     const checkHero = useCallback(async () => {
+        // If we don't have a userId yet, don't try to fetch a hero
+        if (!userId) return;
+
         try {
             setLoading(true);
             const data = await apiClient('/characters/me');
             if (data && data.id) {
-                setFoundHero({ id: data.id, name: data.name });
+                setFoundHero({ id: data.id, name: data.name, userId: userId });
             }
         } catch {
             console.log("No hero found. Ready to forge a new one.");
         } finally {
             setLoading(false);
         }
-    }, []);
+    }, [userId]);
 
     useEffect(() => {
         checkHero();
