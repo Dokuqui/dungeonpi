@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { SpawnerOrmEntity } from '../entities/spawner.orm-entity';
-import { Spawner } from 'src/context/monsters/domain/spawner.entity';
+import { Spawner } from 'src/context/monsters/domain/spawner.class';
 import { ISpawnerRepository } from 'src/context/monsters/app/interface/spawner-repository.interface';
-import { Coordinates } from 'src/context/characters/domain/valueObjects/coordinates.vo';
+import { Coordinates } from 'src/context/characters/domain/class/coordinates.class';
 
 @Injectable()
 export class SpawnerRepository implements ISpawnerRepository {

@@ -6,7 +6,7 @@ import {
   TokenPair,
   ExpectedJwtPayload,
 } from '../../../../auth/app/interface/token-service.interface';
-import { Role } from '../../../../auth/domain/role.enum';
+import { Role } from '../../../domain/enum/role.enum';
 
 @Injectable()
 export class JwtTokenService implements ITokenService {

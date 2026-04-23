@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { MessageOrmEntity } from '../entities/message.orm-entity';
 import { IMessageRepository } from 'src/context/chat/app/interfaces/message-repository.interface';
-import { Message } from 'src/context/chat/domain/message.entity';
+import { Message } from 'src/context/chat/domain/class/message.class';
 
 @Injectable()
 export class MessageRepository implements IMessageRepository {

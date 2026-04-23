@@ -1,4 +1,4 @@
-import { AuthUser } from '../../domain/auth-user.entity';
+import { AuthUser } from '../../domain/class/auth-user.class';
 
 export const USER_REPOSITORY = Symbol('USER_REPOSITORY');
 

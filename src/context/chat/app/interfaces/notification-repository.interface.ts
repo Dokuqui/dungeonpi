@@ -1,4 +1,4 @@
-import { Notification } from '../../domain/notification.entity';
+import { Notification } from '../../domain/class/notification.class';
 
 export const NOTIFICATION_REPOSITORY = 'NOTIFICATION_REPOSITORY';
 

@@ -1,5 +1,5 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { Monster } from '../../domain/monster.entity';
+import { Monster } from '../../domain/monster.class';
 import { SPAWNER_REPOSITORY } from '../interface/spawner-repository.interface';
 import { MONSTER_REPOSITORY } from '../interface/monster-repository.interface';
 import type { ISpawnerRepository } from '../interface/spawner-repository.interface';

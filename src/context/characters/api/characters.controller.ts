@@ -22,7 +22,7 @@ import { CreateCharacterDto } from './dtos/create-character.dto';
 import { MoveCharacterUseCase } from '../app/usecases/move-character.usecase';
 import { MoveCharacterDto } from './dtos/move-character.dto';
 import { Permissions } from 'src/core/decorators/permissions.decorator';
-import { Permission } from 'src/context/auth/domain/permission.enum';
+import { Permission } from 'src/context/auth/domain/enum/permission.enum';
 import { GetCharacterUseCase } from '../app/usecases/get-character.usecase';
 
 interface RequestWithUser extends Request {

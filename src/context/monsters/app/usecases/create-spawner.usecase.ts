@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Spawner } from '../../domain/spawner.entity';
+import { Spawner } from '../../domain/spawner.class';
 import { SPAWNER_REPOSITORY } from '../interface/spawner-repository.interface';
 import type { ISpawnerRepository } from '../interface/spawner-repository.interface';
 

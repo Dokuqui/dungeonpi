@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ROOM_REPOSITORY } from '../interface/room-repository.interface';
 import type { IRoomRepository } from '../interface/room-repository.interface';
-import { Room } from '../../domain/room.entity';
+import { Room } from '../../domain/room.class';
 
 export interface CreateRoomInputDto {
   x: number;

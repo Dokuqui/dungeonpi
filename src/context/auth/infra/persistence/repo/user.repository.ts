@@ -4,9 +4,9 @@ import { Repository } from 'typeorm';
 
 import { UserOrmEntity } from '../entities/user.orm-entity';
 import { IUserRepository } from '../../../app/interface/user-repository.interface';
-import { AuthUser } from '../../../domain/auth-user.entity';
-import { Email } from '../../../domain/valueObjects/email.vo';
-import { Password } from '../../../domain/valueObjects/password.vo';
+import { AuthUser } from '../../../domain/class/auth-user.class';
+import { Email } from 'src/context/auth/domain/class/email.class';
+import { Password } from 'src/context/auth/domain/class/password.class';
 
 @Injectable()
 export class UserRepository implements IUserRepository {

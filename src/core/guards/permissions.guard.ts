@@ -6,10 +6,10 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
-import { Permission } from '../../context/auth/domain/permission.enum';
+import { Permission } from '../../context/auth/domain/enum/permission.enum';
 import { RolePermissions } from '../../context/auth/domain/role-permissions';
 import { PERMISSIONS_KEY } from '../decorators/permissions.decorator';
-import { Role } from '../../context/auth/domain/role.enum';
+import { Role } from '../../context/auth/domain/enum/role.enum';
 
 interface RequestWithUser extends Request {
   user?: {

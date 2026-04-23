@@ -17,8 +17,8 @@ import type { ITokenService } from '../interface/token-service.interface';
 import type { IUserRepository } from '../interface/user-repository.interface';
 import type { IPasswordHasher } from '../interface/password-hasher.interface';
 
-import { Email } from '../../domain/valueObjects/email.vo';
 import { InvalidCredentialsError } from '../../domain/errors/invalid-credentials.error';
+import { Email } from '../../domain/class/email.class';
 
 export interface LoginInputDto {
   email: string;

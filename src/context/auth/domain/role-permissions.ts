@@ -1,5 +1,5 @@
-import { Role } from './role.enum';
-import { Permission } from './permission.enum';
+import { Role } from './enum/role.enum';
+import { Permission } from './enum/permission.enum';
 
 export const RolePermissions: Record<Role, Permission[]> = {
   [Role.PLAYER]: [Permission.PLAY_GAME, Permission.SEND_MESSAGE],

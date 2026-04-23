@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import type { ICharacterRepository } from '../interface/character-repository.interface';
-import { Character } from '../../domain/character.entity';
 import { CHARACTER_REPOSITORY } from '../interface/character-repository.interface';
+import { Character } from '../../domain/class/character.class';
 
 @Injectable()
 export class GetCharactersAtCoordinatesUseCase {

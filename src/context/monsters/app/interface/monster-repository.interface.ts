@@ -1,4 +1,4 @@
-import { Monster } from '../../domain/monster.entity';
+import { Monster } from '../../domain/monster.class';
 
 export const MONSTER_REPOSITORY = 'MONSTER_REPOSITORY';
 

@@ -14,14 +14,7 @@ export class DeviceSessionRepository implements IDeviceSessionRepository {
     private readonly repo: Repository<DeviceSessionOrmEntity>,
   ) {}
 
-  async create(data: {
-    familyId: string;
-    userId: number;
-    refreshTokenHash: string;
-    fingerprint: string;
-    isRevoked: boolean;
-    expiresAt: Date;
-  }): Promise<void> {
+  async create(data: DeviceSessionData): Promise<void> {
     const session = this.repo.create(data);
     await this.repo.save(session);
   }

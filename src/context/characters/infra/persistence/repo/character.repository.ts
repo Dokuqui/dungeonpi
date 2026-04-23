@@ -2,10 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CharacterOrmEntity } from '../entities/character.orm-entity';
-import { Character } from 'src/context/characters/domain/character.entity';
 import { ICharacterRepository } from 'src/context/characters/app/interface/character-repository.interface';
-import { Health } from 'src/context/characters/domain/valueObjects/health.vo';
-import { Coordinates } from 'src/context/characters/domain/valueObjects/coordinates.vo';
+import { Health } from 'src/context/characters/domain/class/health.class';
+import { Coordinates } from 'src/context/characters/domain/class/coordinates.class';
+import { Character } from 'src/context/characters/domain/class/character.class';
 
 @Injectable()
 export class CharacterRepository implements ICharacterRepository {

@@ -1,4 +1,4 @@
-import { Role } from '../../domain/role.enum';
+import { Role } from '../../domain/enum/role.enum';
 
 export const TOKEN_SERVICE = 'TOKEN_SERVICE';
 

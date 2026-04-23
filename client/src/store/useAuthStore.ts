@@ -23,7 +23,7 @@ interface AuthState {
 
 export const useAuthStore = create<AuthState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       token: null,
       refreshToken: null,
       role: null,
@@ -40,13 +40,29 @@ export const useAuthStore = create<AuthState>()(
 
       setCharacter: (character) => set({ character }),
 
-      logout: () => {
+      logout: async () => {
+        const refreshToken = get().refreshToken;
+
+        if (refreshToken) {
+          try {
+            const BASE_URL = import.meta.env.VITE_API_URL;
+            await fetch(`${BASE_URL}/auth/logout`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ refreshToken }),
+            });
+          } catch (error) {
+            console.error('Failed to notify backend of logout', error);
+          }
+        }
+
         set({
           token: null,
           refreshToken: null,
           character: null,
           userId: null,
           role: null,
+          securityAlert: null,
         });
       },
 

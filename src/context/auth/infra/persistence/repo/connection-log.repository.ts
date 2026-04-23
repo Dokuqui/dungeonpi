@@ -2,7 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ConnectionLogOrmEntity } from '../entities/connection-log.orm-entity';
-import { IConnectionLogRepository } from '../../../app/interface/connection-log-repository.interface';
+import {
+  ConnectionLogData,
+  IConnectionLogRepository,
+} from '../../../app/interface/connection-log-repository.interface';
 
 @Injectable()
 export class ConnectionLogRepository implements IConnectionLogRepository {
@@ -11,12 +14,7 @@ export class ConnectionLogRepository implements IConnectionLogRepository {
     private readonly repo: Repository<ConnectionLogOrmEntity>,
   ) {}
 
-  async create(data: {
-    userId: number | null;
-    ipAddress: string;
-    userAgent: string;
-    status: 'SUCCESS' | 'FAIL' | 'SUSPICIOUS';
-  }): Promise<void> {
+  async create(data: ConnectionLogData): Promise<void> {
     const log = this.repo.create({
       ...data,
       userId: data.userId === null ? undefined : data.userId,

@@ -1,4 +1,4 @@
-import { Role } from 'src/context/auth/domain/role.enum';
+import { Role } from 'src/context/auth/domain/enum/role.enum';
 import {
   Column,
   CreateDateColumn,

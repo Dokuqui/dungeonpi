@@ -21,6 +21,7 @@ import {
 import type { Request } from 'express';
 
 import { LoginUseCase } from '../app/usecases/login.usecase';
+import { LogoutUseCase } from '../app/usecases/logout.usecase';
 import { RegisterUseCase } from '../app/usecases/register.usecase';
 import { RefreshUseCase } from '../app/usecases/referesh.usecase';
 import { LoginDto } from './dtos/login.dto';
@@ -42,6 +43,7 @@ interface RequestWithUser extends Request {
 export class AuthController {
   constructor(
     private readonly loginUseCase: LoginUseCase,
+    private readonly logoutUseCase: LogoutUseCase,
     private readonly registerUseCase: RegisterUseCase,
     @Inject(TOKEN_SERVICE) private readonly tokenService: ITokenService,
     private readonly refreshUseCase: RefreshUseCase,
@@ -83,6 +85,25 @@ export class AuthController {
       ip,
       userAgent,
     });
+  }
+
+  @Post('logout')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Log out and revoke the current device session' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        refreshToken: {
+          type: 'string',
+          description: 'The Refresh Token of the session you want to kill',
+        },
+      },
+    },
+  })
+  async logout(@Body('refreshToken') refreshToken: string) {
+    await this.logoutUseCase.execute(refreshToken);
+    return { message: 'Session securely terminated.' };
   }
 
   @Get('me')

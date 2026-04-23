@@ -1,4 +1,4 @@
-import { Message } from '../../domain/message.entity';
+import { Message } from '../../domain/class/message.class';
 
 export const MESSAGE_REPOSITORY = 'MESSAGE_REPOSITORY';
 

@@ -1,4 +1,4 @@
-import { Room } from '../../domain/room.entity';
+import { Room } from '../../domain/room.class';
 
 export const ROOM_REPOSITORY = 'ROOM_REPOSITORY';
 

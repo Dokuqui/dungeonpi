@@ -3,7 +3,7 @@ import {
   MONSTER_REPOSITORY,
   type IMonsterRepository,
 } from '../interface/monster-repository.interface';
-import { Monster } from '../../domain/monster.entity';
+import { Monster } from '../../domain/monster.class';
 
 @Injectable()
 export class GetMonsterAtCoordinatesUseCase {

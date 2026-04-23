@@ -8,7 +8,7 @@ import { CHARACTER_REPOSITORY } from '../interface/character-repository.interfac
 import type { ICharacterRepository } from '../interface/character-repository.interface';
 import { ROOM_REPOSITORY } from 'src/context/world/app/interface/room-repository.interface';
 import type { IRoomRepository } from 'src/context/world/app/interface/room-repository.interface';
-import { Room } from 'src/context/world/domain/room.entity';
+import { Room } from 'src/context/world/domain/room.class';
 import { ChatGateway } from 'src/context/chat/api/chat.gateway';
 
 export interface MoveCharacterInputDto {

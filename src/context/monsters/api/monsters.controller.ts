@@ -15,7 +15,7 @@ import {
 import { JwtAuthGuard } from '../../../core/guards/jwt-auth.guard';
 import { PermissionsGuard } from '../../../core/guards/permissions.guard';
 import { Permissions } from '../../../core/decorators/permissions.decorator';
-import { Permission } from '../../auth/domain/permission.enum';
+import { Permission } from '../../auth/domain/enum/permission.enum';
 import { CreateSpawnerUseCase } from '../app/usecases/create-spawner.usecase';
 import { CreateSpawnerDto } from './dtos/create-spawner.dto';
 

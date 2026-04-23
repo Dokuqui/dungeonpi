@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { MESSAGE_REPOSITORY } from '../interfaces/message-repository.interface';
 import type { IMessageRepository } from '../interfaces/message-repository.interface';
-import { Message } from '../../domain/message.entity';
+import { Message } from '../../domain/class/message.class';
 
 @Injectable()
 export class GetConversationUseCase {

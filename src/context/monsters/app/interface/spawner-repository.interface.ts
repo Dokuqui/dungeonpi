@@ -1,4 +1,4 @@
-import { Spawner } from '../../domain/spawner.entity';
+import { Spawner } from '../../domain/spawner.class';
 
 export const SPAWNER_REPOSITORY = 'SPAWNER_REPOSITORY';
 

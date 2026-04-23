@@ -1,6 +1,7 @@
-export class WeakPasswordError extends Error {
+import { DomainError } from '../../../../core/errors/domain.error';
+
+export class WeakPasswordError extends DomainError {
   constructor(message: string) {
-    super(message);
-    this.name = 'WeakPasswordError';
+    super(message, 'WEAK_PASSWORD');
   }
 }

@@ -1,4 +1,4 @@
-import { Character } from '../../domain/character.entity';
+import { Character } from '../../domain/class/character.class';
 
 export const CHARACTER_REPOSITORY = 'CHARACTER_REPOSITORY';
 

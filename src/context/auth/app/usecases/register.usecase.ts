@@ -6,10 +6,10 @@ import { PASSWORD_HASHER } from '../interface/password-hasher.interface';
 import type { IUserRepository } from '../interface/user-repository.interface';
 import type { IPasswordHasher } from '../interface/password-hasher.interface';
 
-import { Email } from '../../domain/valueObjects/email.vo';
-import { Password } from '../../domain/valueObjects/password.vo';
-import { AuthUser } from '../../domain/auth-user.entity';
+import { AuthUser } from '../../domain/class/auth-user.class';
 import { UserAlreadyExistsError } from '../../domain/errors/user-already-exists.error';
+import { Email } from '../../domain/class/email.class';
+import { Password } from '../../domain/class/password.class';
 
 export interface RegisterInputDto {
   email: string;

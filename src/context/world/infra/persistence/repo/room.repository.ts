@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { RoomOrmEntity } from '../entities/room.orm-entity';
 import { IRoomRepository } from 'src/context/world/app/interface/room-repository.interface';
-import { Room } from 'src/context/world/domain/room.entity';
+import { Room } from 'src/context/world/domain/room.class';
 
 @Injectable()
 export class RoomRepository implements IRoomRepository {

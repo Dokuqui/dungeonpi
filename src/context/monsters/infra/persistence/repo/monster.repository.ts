@@ -3,9 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { MonsterOrmEntity } from '../entities/monster.orm-entity';
 import { IMonsterRepository } from 'src/context/monsters/app/interface/monster-repository.interface';
-import { Monster } from 'src/context/monsters/domain/monster.entity';
-import { Health } from 'src/context/characters/domain/valueObjects/health.vo';
-import { Coordinates } from 'src/context/characters/domain/valueObjects/coordinates.vo';
+import { Monster } from 'src/context/monsters/domain/monster.class';
+import { Health } from 'src/context/characters/domain/class/health.class';
+import { Coordinates } from 'src/context/characters/domain/class/coordinates.class';
 @Injectable()
 export class MonsterRepository implements IMonsterRepository {
   constructor(

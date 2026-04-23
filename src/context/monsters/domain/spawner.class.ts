@@ -1,4 +1,4 @@
-import { Coordinates } from '../../characters/domain/valueObjects/coordinates.vo';
+import { Coordinates } from '../../characters/domain/class/coordinates.class';
 
 export class Spawner {
   private constructor(

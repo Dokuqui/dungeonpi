@@ -1,5 +1,5 @@
-import { Health } from '../../characters/domain/valueObjects/health.vo';
-import { Coordinates } from '../../characters/domain/valueObjects/coordinates.vo';
+import { Health } from '../../characters/domain/class/health.class';
+import { Coordinates } from '../../characters/domain/class/coordinates.class';
 
 export class Monster {
   private constructor(

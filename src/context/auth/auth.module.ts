@@ -21,6 +21,7 @@ import { DEVICE_SESSION_REPOSITORY } from './app/interface/device-session-reposi
 import { DeviceSessionRepository } from './infra/persistence/repo/device-session.repository';
 import { ChatModule } from '../chat/chat.module';
 import { RefreshUseCase } from './app/usecases/referesh.usecase';
+import { LogoutUseCase } from './app/usecases/logout.usecase';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { RefreshUseCase } from './app/usecases/referesh.usecase';
   controllers: [AuthController],
   providers: [
     LoginUseCase,
+    LogoutUseCase,
     RegisterUseCase,
     RefreshUseCase,
     {

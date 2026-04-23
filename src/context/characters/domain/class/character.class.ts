@@ -1,5 +1,5 @@
-import { Health } from './valueObjects/health.vo';
-import { Coordinates } from './valueObjects/coordinates.vo';
+import { Coordinates } from './coordinates.class';
+import { Health } from './health.class';
 
 export class Character {
   private constructor(

@@ -8,7 +8,7 @@ import { CHARACTER_REPOSITORY } from 'src/context/characters/app/interface/chara
 import type { ICharacterRepository } from 'src/context/characters/app/interface/character-repository.interface';
 import { ROOM_REPOSITORY } from '../interface/room-repository.interface';
 import type { IRoomRepository } from '../interface/room-repository.interface';
-import { Room } from '../../domain/room.entity';
+import { Room } from '../../domain/room.class';
 
 @Injectable()
 export class LookAroundUseCase {

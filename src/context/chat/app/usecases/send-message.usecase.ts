@@ -3,8 +3,8 @@ import { MESSAGE_REPOSITORY } from '../interfaces/message-repository.interface';
 import type { IMessageRepository } from '../interfaces/message-repository.interface';
 import { NOTIFICATION_REPOSITORY } from '../interfaces/notification-repository.interface';
 import type { INotificationRepository } from '../interfaces/notification-repository.interface';
-import { Message } from '../../domain/message.entity';
-import { Notification } from '../../domain/notification.entity';
+import { Message } from '../../domain/class/message.class';
+import { Notification } from '../../domain/class/notification.class';
 
 export interface SendMessageInputDto {
   senderId: number;
