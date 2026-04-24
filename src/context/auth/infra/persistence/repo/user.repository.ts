@@ -58,6 +58,11 @@ export class UserRepository implements IUserRepository {
     return ormEntity;
   }
 
+  async findAll(): Promise<AuthUser[]> {
+    const userOrms = await this.ormRepository.find();
+    return userOrms.map((ormUser) => this.toDomain(ormUser));
+  }
+
   async findById(id: number): Promise<AuthUser | null> {
     const userOrm = await this.ormRepository.findOne({ where: { id } });
     if (!userOrm) return null;

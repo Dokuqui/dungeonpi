@@ -1,10 +1,13 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { forwardRef, Inject, Module, OnModuleInit } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { AuthController } from './api/auth.controller';
 
 import { LoginUseCase } from './app/usecases/login.usecase';
-import { USER_REPOSITORY } from './app/interface/user-repository.interface';
+import {
+  type IUserRepository,
+  USER_REPOSITORY,
+} from './app/interface/user-repository.interface';
 import { PASSWORD_HASHER } from './app/interface/password-hasher.interface';
 import { TOKEN_SERVICE } from './app/interface/token-service.interface';
 
@@ -22,6 +25,7 @@ import { DeviceSessionRepository } from './infra/persistence/repo/device-session
 import { ChatModule } from '../chat/chat.module';
 import { RefreshUseCase } from './app/usecases/referesh.usecase';
 import { LogoutUseCase } from './app/usecases/logout.usecase';
+import { BloomFilter } from 'src/core/filters/bloom.filter';
 
 @Module({
   imports: [
@@ -38,6 +42,10 @@ import { LogoutUseCase } from './app/usecases/logout.usecase';
     LogoutUseCase,
     RegisterUseCase,
     RefreshUseCase,
+    {
+      provide: 'BLOOM_FILTER_EMAIL',
+      useFactory: () => new BloomFilter(100000, 3),
+    },
     {
       provide: USER_REPOSITORY,
       useClass: UserRepository,
@@ -61,4 +69,31 @@ import { LogoutUseCase } from './app/usecases/logout.usecase';
   ],
   exports: [TOKEN_SERVICE, PASSWORD_HASHER],
 })
-export class AuthModule {}
+export class AuthModule implements OnModuleInit {
+  constructor(
+    @Inject(USER_REPOSITORY) private readonly userRepository: IUserRepository,
+    @Inject('BLOOM_FILTER_EMAIL')
+    private readonly emailBloomFilter: BloomFilter,
+  ) {}
+
+  async onModuleInit() {
+    console.log('[AuthModule] Bootstrapping Email Bloom Filter...');
+
+    try {
+      const allUsers = await this.userRepository.findAll();
+
+      for (const user of allUsers) {
+        this.emailBloomFilter.add(user.email.value);
+      }
+
+      console.log(
+        `[AuthModule] Bloom Filter securely loaded with ${allUsers.length} existing emails.`,
+      );
+    } catch (error) {
+      console.error(
+        '[AuthModule] Failed to bootstrap Bloom Filter. Does findAll() exist?',
+        error,
+      );
+    }
+  }
+}

@@ -2,12 +2,15 @@ import { Inject, Injectable, ConflictException } from '@nestjs/common';
 import { CHARACTER_REPOSITORY } from '../interface/character-repository.interface';
 import type { ICharacterRepository } from '../interface/character-repository.interface';
 import { Character } from '../../domain/class/character.class';
+import { BloomFilter } from 'src/core/filters/bloom.filter';
 
 @Injectable()
 export class CreateCharacterUseCase {
   constructor(
     @Inject(CHARACTER_REPOSITORY)
     private readonly characterRepository: ICharacterRepository,
+    @Inject('BLOOM_FILTER_NAME')
+    private readonly nameBloomFilter: BloomFilter,
   ) {}
 
   async execute(params: { userId: number; name: string }): Promise<Character> {
@@ -20,15 +23,28 @@ export class CreateCharacterUseCase {
       );
     }
 
-    const existingByName = await this.characterRepository.findByName(name);
-    if (existingByName) {
-      throw new ConflictException(
-        `The name "${name}" is already claimed by another soul.`,
+    if (this.nameBloomFilter.mightContain(name)) {
+      console.log(
+        `[BloomFilter] Name "${name}" might exist. Querying slow database...`,
+      );
+
+      const existingByName = await this.characterRepository.findByName(name);
+      if (existingByName) {
+        throw new ConflictException(
+          `The name "${name}" is already claimed by another soul.`,
+        );
+      }
+    } else {
+      console.log(
+        `[BloomFilter] Name "${name}" is definitely unique! DB bypassed.`,
       );
     }
 
     const character = Character.create(userId, name);
     await this.characterRepository.save(character);
+
+    this.nameBloomFilter.add(name);
+
     return character;
   }
 }

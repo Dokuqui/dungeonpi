@@ -19,6 +19,11 @@ export class CharacterRepository implements ICharacterRepository {
     await this.ormRepository.save(ormEntity);
   }
 
+  async findAll(): Promise<Character[]> {
+    const ormEntities = await this.ormRepository.find();
+    return ormEntities.map((orm) => this.toDomainEntity(orm));
+  }
+
   async findByUserId(userId: number): Promise<Character | null> {
     const ormEntity = await this.ormRepository.findOne({ where: { userId } });
     if (!ormEntity) return null;
