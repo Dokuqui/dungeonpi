@@ -67,7 +67,7 @@ import { BloomFilter } from 'src/core/filters/bloom.filter';
       useClass: DeviceSessionRepository,
     },
   ],
-  exports: [TOKEN_SERVICE, PASSWORD_HASHER],
+  exports: [TOKEN_SERVICE, PASSWORD_HASHER, USER_REPOSITORY],
 })
 export class AuthModule implements OnModuleInit {
   constructor(

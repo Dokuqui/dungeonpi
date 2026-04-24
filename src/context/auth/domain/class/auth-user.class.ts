@@ -7,7 +7,7 @@ export class AuthUser {
     private readonly _id: number | undefined,
     private readonly _email: Email,
     private _password: Password,
-    private readonly _role: Role,
+    private _role: Role,
     private readonly _createdAt: Date,
     private _riskScore: number,
     private _tokenVersion: number,
@@ -86,5 +86,10 @@ export class AuthUser {
       throw new Error('Entity rule violation: Password must be hashed.');
     }
     this._password = newHashedPassword;
+  }
+
+  // Only in dev mode
+  public makeAdmin(): void {
+    this._role = Role.ADMIN;
   }
 }

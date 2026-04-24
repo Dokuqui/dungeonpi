@@ -10,6 +10,7 @@ import { MonstersModule } from './context/monsters/monsters.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ChatModule } from './context/chat/chat.module';
 import { PaymentsModule } from './context/payment/payment.module';
+import { DatabaseSeederService } from './core/seed/seeder.seed';
 
 @Module({
   imports: [
@@ -42,6 +43,6 @@ import { PaymentsModule } from './context/payment/payment.module';
     PaymentsModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, DatabaseSeederService],
 })
 export class AppModule {}

@@ -27,6 +27,6 @@ import { AuthModule } from '../auth/auth.module';
     { provide: SPAWNER_REPOSITORY, useClass: SpawnerRepository },
     { provide: MONSTER_REPOSITORY, useClass: MonsterRepository },
   ],
-  exports: [GetMonsterAtCoordinatesUseCase],
+  exports: [GetMonsterAtCoordinatesUseCase, SPAWNER_REPOSITORY],
 })
 export class MonstersModule {}
